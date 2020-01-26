@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 
-app.use(express.static("views/nodelogin"));
+app.use(express.static("views/nodelogin/login.html"));
 
 app.get("/", (req, res) => {
   res.end("Done");
