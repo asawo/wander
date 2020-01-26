@@ -1,5 +1,6 @@
 # Wander
 My first full stack project for dog lovers 🐕
+WIP but if you would like to see what I have so far, it's deployed on [Heroku](https://wander-love.herokuapp.com/) now.
 
 ## Description
 Wander is a service that will let you check out dogs around you, and show them your appreciation & love with a "pat" button. Or even better, create a profile for your beloved doggo on Wander for others to send your doggo some "pats"!
