@@ -22,36 +22,35 @@
       <img src="assets/doggo.png" style="height: 35vh" />
     </div>
 
+    <!-- Form groups -->
     <div class="container mt-3" style="max-width: 50%">
-      <div class="form-group">
-        <label for="loginEmailForm">Email address</label>
+      <form action="auth" method="POST" class="form-group">
         <input
-          type="email"
-          class="form-control"
-          id="loginEmailForm"
-          aria-describedby="emailHelp"
+          type="text"
+          name="username"
+          class="form-control mt-3"
           placeholder="Enter email"
+          required
         />
-      </div>
 
-      <div class="form-group">
-        <label for="exampleInputPassword1">Password</label>
         <input
           type="password"
-          class="form-control"
-          id="exampleInputPassword1"
+          name="password"
+          class="form-control mt-3"
           placeholder="Password"
+          required
         />
-      </div>
 
-      <div>
-        <button type="button" class="btn btn-lg btn-block btn-primary mt-4">
-          Sign in
-        </button>
-      </div>
-      <div class="mt-2">
-        <p>Don't have an account? Click here to create one</p>
-      </div>
+        <input
+          type="submit"
+          value="Sign in"
+          placeholder="Enter email"
+          class="btn btn-lg btn-block btn-primary mt-4"
+        />
+        <div class="mt-2">
+          <p>Don't have an account? Click here to create one</p>
+        </div>
+      </form>
     </div>
 
     <footer class="mt-5 p-3 text-center bg-dark text-light">
