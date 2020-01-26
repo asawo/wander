@@ -1,2 +1,2 @@
-# wander
-Full stack project for dog lovers
+# Wander
+Full stack project for dog lovers 🐕
