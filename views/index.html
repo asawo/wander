@@ -11,7 +11,7 @@
     />
 
     <script src="https://use.fontawesome.com/fdfdb554d9.js"></script>
-    <title>Wander - Log in</title>
+    <title>Wander</title>
   </head>
   <body style="background-color: #ffead4;">
     <div>
@@ -48,9 +48,56 @@
           class="btn btn-lg btn-block btn-primary mt-4"
         />
         <div class="mt-2">
-          <p>Don't have an account? Click here to create one</p>
+          <a
+            href="#"
+            data-toggle="modal"
+            data-target=".modal-lg"
+            >Don't have an account? Click here to create one</a
+          >
         </div>
       </form>
+    </div>
+
+    <!-- Registration modal -->
+    <div
+      class="modal fade modal-lg container text-center"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="myLargeModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+          <h1 class="mt-5">Register here</h1>
+
+          <form action="auth" method="POST" class="form-group container-fluid">
+
+            <input
+              type="text"
+              name="username"
+              class="form-control mt-3"
+              placeholder="Enter email"
+              required
+            />
+    
+            <input
+              type="password"
+              name="password"
+              class="form-control mt-3"
+              placeholder="Password"
+              required
+            />
+    
+            <input
+              type="submit"
+              value="Create account"
+              placeholder="submit"
+              class="btn btn-lg btn-block btn-primary mt-4"
+            />
+        </div>
+      </div>
     </div>
 
     <footer class="mt-5 p-3 text-center bg-dark text-light">
