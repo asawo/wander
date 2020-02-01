@@ -2,18 +2,29 @@ const express = require('express')
 const router = express.Router()
 const bodyParser = require('body-parser')
 
-// Setting up body parser to parse json
+router.use(bodyParser.json())
+
+// Session starts if a user is added via /add-user
+function authenticate(req, res, next) {
+	if (req.session) {
+		if (req.session.username) {
+			next()
+		} else {
+			res.redirect('/users/add-user')
+		}
+	}
+}
 
 router.get('/', (req, res) => {
 	let accounts = {
-		account: 'arthur',
-		password: 'secret'
+		account: req.session.username,
+		age: req.session.age
 	}
 
 	res.json(accounts)
 })
 
-// {account: "arthur", password: "secret hee hee"}
+// POST a JSON with account and password key
 router.post('/login', (req, res) => {
 	let account = req.body.account
 	let password = req.body.password
@@ -21,8 +32,8 @@ router.post('/login', (req, res) => {
 	res.send(account + ' ' + password)
 })
 
-router.get('/all', (req, res) => {
-	// get all users
+// get all users
+router.get('/all', authenticate, (req, res) => {
 	let users = [
 		{
 			username: 'arthur',
@@ -40,16 +51,21 @@ router.get('/all', (req, res) => {
 	res.json(users)
 })
 
-router.get('/users/:userId', (req, res) => {
-	// get users by user Id
-})
+// get users by user Id
+router.get('/users/:userId', (req, res) => {})
 
+// create new user
 router.post('/add-user', (req, res) => {
-	// create a new user
+	let username = req.body.username
+	let age = req.body.age
+
+	if (req.session) {
+		req.session.username = username
+		req.session.age = age
+	}
 })
 
-router.delete('/users', (req, res) => {
-	// delete a user
-})
+// delete a user
+router.delete('/users', (req, res) => {})
 
 module.exports = router

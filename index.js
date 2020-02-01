@@ -1,10 +1,17 @@
 const express = require('express')
 const app = express()
+const session = require('express-session')
 const userRoutes = require('./routes/users')
-const bodyParser = require('body-parser')
-app.use(bodyParser.json())
 
 app.use('/users', userRoutes)
+
+app.use(
+	session({
+		secret: 'keyboard cat',
+		resave: false,
+		saveUninitialized: true
+	})
+)
 
 app.use(express.static('views'))
 
