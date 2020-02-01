@@ -1,27 +1,13 @@
-const express = require("express");
-const app = express();
-const path = require("path");
+const express = require('express')
+const app = express()
+const path = require('path')
+const userRoutes = require('./routes/users')
 
-app.use(express.static("views"));
+app.use('/users', userRoutes)
 
-app.get("/login", (req, res) => {
-  let accounts = {
-    account: "arthur",
-    password: "secret hee hee"
-  };
+app.use(express.static('views'))
 
-  res.json(accounts);
-});
-
-// {account: "arthur", password: "secret hee hee"}
-app.post("/login", (req, res) => {
-  let account = req.body.account;
-  let password = req.body.password;
-  console.log(account + " " + password);
-  res.send("OK");
-});
-
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
-  console.log(`Server is listening at :${PORT}`);
-});
+	console.log(`Server is listening at :${PORT}`)
+})

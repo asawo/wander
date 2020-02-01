@@ -1,16 +1,16 @@
 {
-  "name": "wander",
-  "version": "1.0.0",
-  "description": "Full stack project for dog lovers 🐕",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "local": "heroku local web"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.17.1",
-    "express-session": "^1.17.0"
-  }
+	"name": "wander",
+	"version": "1.0.0",
+	"description": "Full stack project for dog lovers 🐕",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"local": "heroku local web"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.17.1",
+		"express-session": "^1.17.0"
+	}
 }
