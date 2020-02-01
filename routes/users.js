@@ -1,10 +1,13 @@
 const express = require('express')
 const router = express.Router()
+const bodyParser = require('body-parser')
+
+// Setting up body parser to parse json
 
 router.get('/', (req, res) => {
 	let accounts = {
 		account: 'arthur',
-		password: 'secret hee hee'
+		password: 'secret'
 	}
 
 	res.json(accounts)
@@ -15,10 +18,10 @@ router.post('/login', (req, res) => {
 	let account = req.body.account
 	let password = req.body.password
 	console.log(account + ' ' + password)
-	res.send('OK')
+	res.send(account + ' ' + password)
 })
 
-router.get('/users', (req, res) => {
+router.get('/all', (req, res) => {
 	// get all users
 	let users = [
 		{
@@ -34,9 +37,7 @@ router.get('/users', (req, res) => {
 			password: 'secret'
 		}
 	]
-
 	res.json(users)
-	console.log(users)
 })
 
 router.get('/users/:userId', (req, res) => {
