@@ -33,7 +33,7 @@ router.post('/login', (req, res) => {
 })
 
 // get all users
-router.get('/all', authenticate, (req, res) => {
+router.get('/all', (req, res) => {
 	let users = [
 		{
 			username: 'arthur',
