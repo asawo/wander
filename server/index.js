@@ -7,7 +7,21 @@ const pgp = require('pg-promise')()
 const connectionString = 'postgres://localhost:5432/wander' // or process.env.blah
 const db = pgp(connectionString)
 
-console.log(db)
+// Insert one
+// db.none(
+// 	'INSERT INTO accounts(username, password, email) VALUES($1, $2, $3) RETURNING id',
+// 	['asawo', 'fakepassword', 'fakeemail@gmail.com']
+// )
+// 	.then((data) => {
+// 		console.log(data)
+// 	})
+// 	.then(error => console.log(error))
+
+db.none('DELETE FROM accounts WHERE id = $1', [1])
+	.then(() => {
+		console.log('DELETED')
+	})
+	.catch(error => console.log(error))
 
 app.use('/server/routes/users', userRoutes)
 
