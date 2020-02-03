@@ -17,11 +17,12 @@ const db = pgp(connectionString)
 // 	})
 // 	.then(error => console.log(error))
 
-db.none('DELETE FROM accounts WHERE id = $1', [1])
-	.then(() => {
-		console.log('DELETED')
-	})
-	.catch(error => console.log(error))
+// DELETE RECORDS
+// db.none('DELETE FROM accounts WHERE id = $1', [1])
+// 	.then(() => {
+// 		console.log('DELETED')
+// 	})
+// 	.catch(error => console.log(error))
 
 app.use('/server/routes/users', userRoutes)
 
