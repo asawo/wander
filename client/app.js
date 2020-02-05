@@ -1,16 +1,23 @@
 const signInForm = document.querySelector('#signInForm')
 const signUpForm = document.querySelector('#signUpForm')
 
-// async function postData(url = '', data = {}) {
-// 	const response = await fetch(url, {
-// 		method: 'POST',
-// 		headers: {
-// 			'Content-Type': 'application/json'
-// 		},
-// 		body: JSON.stringify(data)
-// 	})
-// 	return await response.json()
-// }
+// Sign in with form data
+function signIn(jsonData) {
+	fetch('../signin', {
+		method: 'post',
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(jsonData)
+	})
+		.then(res => {
+			console.log('success!')
+		})
+		.catch(error => {
+			console.log(error)
+		})
+}
 
 signInForm.addEventListener('submit', e => {
 	event.preventDefault()
@@ -18,7 +25,8 @@ signInForm.addEventListener('submit', e => {
 		username: e.target.elements[0].value,
 		password: e.target.elements[1].value
 	}
-	console.log(signInFormData)
+
+	signIn(signInFormData)
 })
 
 signUpForm.addEventListener('submit', e => {
