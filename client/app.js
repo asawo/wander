@@ -19,13 +19,13 @@ function signUp(jsonData) {
 }
 
 signUpForm.addEventListener('submit', e => {
-	// event.preventDefault()
-	const signInFormData = {
+	event.preventDefault()
+	const signUpFormData = {
 		username: e.target.elements[0].value,
 		password: e.target.elements[1].value
 	}
 
-	signUp(signInFormData)
+	signUp(signUpFormData)
 })
 
 signInForm.addEventListener('submit', e => {
