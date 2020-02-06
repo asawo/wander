@@ -6,23 +6,6 @@ const bodyParser = require('body-parser')
 const pgp = require('pg-promise')()
 const CONNECTION_STRING = 'postgres://localhost:5432/wander' // or process.env.blah
 
-// INSERT RECORDS
-// db.none(
-// 	'INSERT INTO accounts(username, password) VALUES($1, $2) RETURNING id',
-// 	['asawo', 'fakepassword']
-// )
-// 	.then((data) => {
-// 		console.log(data)
-// 	})
-// 	.then(error => console.log(error))
-
-// DELETE RECORDS
-// db.none('DELETE FROM accounts WHERE id = $1', [1])
-// 	.then(() => {
-// 		console.log('DELETED')
-// 	})
-// 	.catch(error => console.log(error))
-
 // Use user routes
 app.use('/server/routes/users', userRoutes)
 
