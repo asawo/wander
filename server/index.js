@@ -13,6 +13,8 @@ app.use('/', express.static(path.join(__dirname, '../client')))
 app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '../client/signup.html'))
 })
+
+// Serve home.html page
 app.get('/home', (req, res) => {
 	res.sendFile(path.join(__dirname, '../client/home.html'))
 })
@@ -34,7 +36,7 @@ app.post('/signin', (req, res) => {
 			if (user) {
 				bcrypt.compare(password, user.password, function(error, result) {
 					if (result) {
-						console.log('SUCCESS')
+						console.log('SUCCESS, redirecting to /home')
 						res.redirect('/home')
 					} else {
 						console.log('Invalid username or password')
