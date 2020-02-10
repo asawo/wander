@@ -13,8 +13,8 @@ function signUp(jsonData) {
 		.then(res => {
 			console.log(res)
 		})
-		.catch(error => {
-			console.log(error)
+		.catch(e => {
+			console.log(e)
 		})
 }
 
@@ -29,8 +29,8 @@ function signIn(jsonData) {
 		.then(res => {
 			console.log(res)
 		})
-		.catch(error => {
-			console.log(error)
+		.catch(e => {
+			console.log(e)
 		})
 }
 

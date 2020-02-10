@@ -2,11 +2,13 @@ const express = require('express')
 const app = express()
 const path = require('path')
 const bodyParser = require('body-parser')
-const bcrypt = require('bcrypt')
 const pgp = require('pg-promise')()
-
+const db = pgp(CONNECTION_STRING)
 const CONNECTION_STRING = 'postgres://localhost:5432/wander' // or process.env.blah
+const bcrypt = require('bcrypt')
 const SALT_ROUNDS = 10
+
+app.use(bodyParser.json())
 
 // Serve signin.html page
 app.use('/', express.static(path.join(__dirname, '../client')))
@@ -18,10 +20,6 @@ app.get('/', (req, res) => {
 app.get('/home', (req, res) => {
 	res.sendFile(path.join(__dirname, '../client/home.html'))
 })
-
-app.use(bodyParser.json())
-
-const db = pgp(CONNECTION_STRING)
 
 // Login page
 app.post('/signin', (req, res) => {
