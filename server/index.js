@@ -3,8 +3,8 @@ const app = express()
 const path = require('path')
 const bodyParser = require('body-parser')
 const pgp = require('pg-promise')()
-const db = pgp(CONNECTION_STRING)
 const CONNECTION_STRING = 'postgres://localhost:5432/wander' // or process.env.blah
+const db = pgp(CONNECTION_STRING)
 const bcrypt = require('bcrypt')
 const SALT_ROUNDS = 10
 
@@ -27,7 +27,7 @@ app.post('/signin', (req, res) => {
 	let password = req.body.password
 
 	db.oneOrNone(
-		'SELECT userid,username,password FROM users WHERE username = $1',
+		'SELECT userid, username, password FROM users WHERE username = $1',
 		[username]
 	)
 		.then(user => {
@@ -35,7 +35,7 @@ app.post('/signin', (req, res) => {
 				bcrypt.compare(password, user.password, function(error, result) {
 					if (result) {
 						console.log('SUCCESS, redirecting to /home')
-						res.redirect('/home')
+						res.send({ redirect: '/home' })
 					} else {
 						console.log('Invalid username or password')
 					}
@@ -60,7 +60,7 @@ app.post('/signup', (req, res) => {
 			} else {
 				bcrypt.hash(password, SALT_ROUNDS, function(error, hash) {
 					if (error == null) {
-						db.none('INSERT INTO users(username,password) VALUES($1,$2)', [
+						db.none('INSERT INTO users(username, password) VALUES($1,$2)', [
 							username,
 							hash
 						])
@@ -76,7 +76,6 @@ app.post('/signup', (req, res) => {
 	)
 })
 
-// listen here
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
 	console.log(`Server is listening at :${PORT}`)
