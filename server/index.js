@@ -3,8 +3,11 @@ const app = express()
 const path = require('path')
 const userRoutes = require('./routes/users')
 const bodyParser = require('body-parser')
+const bcrypt = require('bcrypt')
 const pgp = require('pg-promise')()
+
 const CONNECTION_STRING = 'postgres://localhost:5432/wander' // or process.env.blah
+const SALT_ROUNDS = 10
 
 // Use user routes
 app.use('/server/routes/users', userRoutes)
@@ -30,14 +33,19 @@ app.post('/signup', (req, res) => {
 				console.log('user already exists')
 				// Render the above message on page
 			} else {
-				db.none('INSERT INTO users(username,password) VALUES($1,$2)', [
-					username,
-					password
-				])
-					.then(() => {
-						console.log('SUCCESS')
-					})
-					.catch(error => console.log(error))
+				bcrypt.hash(password, SALT_ROUNDS, function(error, hash) {
+					if (error == null) {
+						db.none('INSERT INTO users(username,password) VALUES($1,$2)', [
+							username,
+							hash
+						])
+							.then(() => {
+								// Action after creating the account
+								console.log('SUCCESS')
+							})
+							.catch(e => console.log(e))
+					}
+				})
 			}
 		}
 	)
