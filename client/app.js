@@ -11,7 +11,23 @@ function signUp(jsonData) {
 		body: JSON.stringify(jsonData)
 	})
 		.then(res => {
-			console.log('success!')
+			console.log(JSON.stringify(res.message))
+		})
+		.catch(error => {
+			console.log(error)
+		})
+}
+
+function signIn(jsonData) {
+	fetch('../signIn', {
+		method: 'post',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(jsonData)
+	})
+		.then(res => {
+			console.log(res)
 		})
 		.catch(error => {
 			console.log(error)
