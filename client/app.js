@@ -11,7 +11,7 @@ function signUp(jsonData) {
 		body: JSON.stringify(jsonData)
 	})
 		.then(res => {
-			console.log(JSON.stringify(res.message))
+			console.log(res)
 		})
 		.catch(error => {
 			console.log(error)
@@ -19,7 +19,7 @@ function signUp(jsonData) {
 }
 
 function signIn(jsonData) {
-	fetch('../signIn', {
+	fetch('../signin', {
 		method: 'post',
 		headers: {
 			'Content-Type': 'application/json'
@@ -35,7 +35,6 @@ function signIn(jsonData) {
 }
 
 signUpForm.addEventListener('submit', e => {
-	event.preventDefault()
 	const signUpFormData = {
 		username: e.target.elements[0].value,
 		password: e.target.elements[1].value
@@ -45,11 +44,10 @@ signUpForm.addEventListener('submit', e => {
 })
 
 signInForm.addEventListener('submit', e => {
-	event.preventDefault()
 	const signInFormData = {
 		username: e.target.elements[0].value,
 		password: e.target.elements[1].value
 	}
 
-	// signIn(signInFormData)
+	signIn(signInFormData)
 })

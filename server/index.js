@@ -13,25 +13,38 @@ app.use('/', express.static(path.join(__dirname, '../client')))
 app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '../client/signup.html'))
 })
+app.get('/home', (req, res) => {
+	res.sendFile(path.join(__dirname, '../client/home.html'))
+})
 
 app.use(bodyParser.json())
 
 const db = pgp(CONNECTION_STRING)
 
 // Login page
-app.post('/signIn', (req, res) => {
+app.post('/signin', (req, res) => {
 	let username = req.body.username
 	let password = req.body.password
 
 	db.oneOrNone(
 		'SELECT userid,username,password FROM users WHERE username = $1',
 		[username]
-	).then(user => {
-		if (user) {
-		} else {
-			console.log('Invalid username or password')
-		}
-	})
+	)
+		.then(user => {
+			if (user) {
+				bcrypt.compare(password, user.password, function(error, result) {
+					if (result) {
+						console.log('SUCCESS')
+						res.redirect('/home')
+					} else {
+						console.log('Invalid username or password')
+					}
+				})
+			} else {
+				console.log('Invalid username or password')
+			}
+		})
+		.catch(e => console.log(e))
 })
 
 // Register users
