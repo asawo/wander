@@ -16,6 +16,7 @@ async function postData(url = '', data = {}) {
 }
 
 signUpForm.addEventListener('submit', e => {
+	e.preventDefault()
 	const signUpFormData = {
 		username: e.target.elements[0].value,
 		password: e.target.elements[1].value
@@ -27,6 +28,7 @@ signUpForm.addEventListener('submit', e => {
 })
 
 signInForm.addEventListener('submit', e => {
+	e.preventDefault()
 	const signInFormData = {
 		username: e.target.elements[0].value,
 		password: e.target.elements[1].value
