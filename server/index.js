@@ -35,13 +35,15 @@ app.post('/signin', (req, res) => {
 				bcrypt.compare(password, user.password, function(error, result) {
 					if (result) {
 						console.log('SUCCESS, redirecting to /home')
-						res.send({ redirect: '/home' })
+						res.redirect('/home')
 					} else {
 						console.log('Invalid username or password')
+						res.send({ message: 'Invalid username or password' })
 					}
 				})
 			} else {
 				console.log('Invalid username or password')
+				res.send({ message: 'Invalid username or password' })
 			}
 		})
 		.catch(e => console.log(e))
@@ -55,7 +57,7 @@ app.post('/signup', (req, res) => {
 	db.oneOrNone('SELECT userid FROM users WHERE username = $1', [username]).then(
 		user => {
 			if (user) {
-				console.log(`User ${username} already exists`)
+				res.send({ message: `User ${username} already exists` })
 				// Render the above message on page
 			} else {
 				bcrypt.hash(password, SALT_ROUNDS, function(error, hash) {

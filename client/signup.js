@@ -12,7 +12,7 @@ async function postData(url = '', data = {}) {
 		body: JSON.stringify(data)
 	})
 
-	return await response.json()
+	return await response
 }
 
 signUpForm.addEventListener('submit', e => {
@@ -23,7 +23,7 @@ signUpForm.addEventListener('submit', e => {
 	}
 
 	postData('../signup', signUpFormData).then(data => {
-		console.log(data)
+		console.log(data.json())
 	})
 })
 
@@ -35,6 +35,12 @@ signInForm.addEventListener('submit', e => {
 	}
 
 	postData('../signin', signInFormData).then(data => {
-		console.log(data)
+		if (data.redirected === true) {
+			// redirect
+		} else {
+			// show error
+			console.log('show alert')
+			$('.alert').show()
+		}
 	})
 })
