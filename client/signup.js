@@ -23,7 +23,7 @@ signUpForm.addEventListener('submit', e => {
 	}
 
 	postData('../signup', signUpFormData).then(data => {
-		console.log(data.json())
+		console.log(data.json().then(data))
 	})
 })
 
@@ -36,7 +36,7 @@ signInForm.addEventListener('submit', e => {
 
 	postData('../signin', signInFormData).then(data => {
 		if (data.redirected === true) {
-			// redirect
+			window.location.replace(data.url)
 		} else {
 			// show error
 			console.log('show alert')

@@ -68,6 +68,7 @@ app.post('/signup', (req, res) => {
 						])
 							.then(() => {
 								// Action after creating the account
+								res.send({ message: `User ${username} created!` })
 								console.log(`User created: ${username}`)
 							})
 							.catch(e => console.log(e))
