@@ -12,7 +12,7 @@ async function postData(url = '', data = {}) {
 		body: JSON.stringify(data)
 	})
 
-	return await response
+	return await response.json()
 }
 
 signUpForm.addEventListener('submit', e => {
@@ -23,7 +23,15 @@ signUpForm.addEventListener('submit', e => {
 	}
 
 	postData('../signup', signUpFormData).then(data => {
-		console.log(data)
+		if (data.registration === 'SUCCESS') {
+			// show success message and close modal
+			console.log('SUCCESS')
+			$('.sign-up-success').show()
+		} else {
+			// show alert message
+			console.log('nope')
+			$('.sign-up-alert').show()
+		}
 	})
 })
 
@@ -35,10 +43,12 @@ signInForm.addEventListener('submit', e => {
 	}
 
 	postData('../signin', signInFormData).then(data => {
-		if (data.redirected === true) {
-			window.location.replace(data.url)
+		if (data.authenticated === true) {
+			window.location.replace('/home')
+			console.log(data.url)
 		} else {
-			$('.alert').show()
+			console.log(data)
+			$('.sign-in-alert').show()
 		}
 	})
 })

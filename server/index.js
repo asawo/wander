@@ -35,7 +35,8 @@ app.post('/signin', (req, res) => {
 				bcrypt.compare(password, user.password, function(error, result) {
 					if (result) {
 						console.log('SUCCESS, redirecting to /home')
-						res.redirect('/home')
+						res.send({ authenticated: true })
+						// res.status(number).send('message')
 					} else {
 						console.log('Invalid username or password')
 						res.send({ message: 'Invalid username or password' })
@@ -68,7 +69,7 @@ app.post('/signup', (req, res) => {
 						])
 							.then(() => {
 								// Action after creating the account
-								res.send({ message: `User ${username} created!` })
+								res.send({ registration: 'SUCCESS' })
 								console.log(`User created: ${username}`)
 							})
 							.catch(e => console.log(e))
