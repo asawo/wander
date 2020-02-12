@@ -1,7 +1,6 @@
 const signInForm = document.querySelector('#signInForm')
 const signUpForm = document.querySelector('#signUpForm')
 
-// Sign in with form data
 async function postData(url = '', data = {}) {
 	const response = await fetch(url, {
 		method: 'POST',
@@ -15,8 +14,10 @@ async function postData(url = '', data = {}) {
 	return await response.json()
 }
 
+// Log in
 signUpForm.addEventListener('submit', e => {
 	e.preventDefault()
+
 	const signUpFormData = {
 		username: e.target.elements[0].value,
 		password: e.target.elements[1].value
@@ -25,18 +26,18 @@ signUpForm.addEventListener('submit', e => {
 	postData('../signup', signUpFormData).then(data => {
 		if (data.registration === 'SUCCESS') {
 			// show success message and close modal
-			console.log('SUCCESS')
 			$('.sign-up-success').show()
 		} else {
 			// show alert message
-			console.log('nope')
 			$('.sign-up-alert').show()
 		}
 	})
 })
 
+// Registration
 signInForm.addEventListener('submit', e => {
 	e.preventDefault()
+
 	const signInFormData = {
 		username: e.target.elements[0].value,
 		password: e.target.elements[1].value
@@ -52,3 +53,5 @@ signInForm.addEventListener('submit', e => {
 		}
 	})
 })
+
+module.exports = postData
