@@ -7,8 +7,16 @@ const CONNECTION_STRING = 'postgres://localhost:5432/wander' // or process.env.b
 const db = pgp(CONNECTION_STRING)
 const bcrypt = require('bcrypt')
 const SALT_ROUNDS = 10
+const session = require('express-session')
 
 app.use(bodyParser.json())
+app.use(
+	session({
+		secret: 'blahblah',
+		resave: false,
+		saveUninitialized: false
+	})
+)
 
 // Serve signin.html page
 app.use('/', express.static(path.join(__dirname, '../client')))
@@ -18,10 +26,15 @@ app.get('/', (req, res) => {
 
 // Serve home.html page
 app.get('/home', (req, res) => {
-	res.sendFile(path.join(__dirname, '../client/home.html'))
+	if (req.session.user) {
+		res.sendFile(path.join(__dirname, '../client/home.html'))
+		// res.send({ username: req.session.user.username })
+	} else {
+		res.sendFile(path.join(__dirname, '../client/signup.html'))
+	}
 })
 
-// Login page
+// Sign in page
 app.post('/signin', (req, res) => {
 	let username = req.body.username
 	let password = req.body.password
@@ -35,7 +48,15 @@ app.post('/signin', (req, res) => {
 				bcrypt.compare(password, user.password, function(error, result) {
 					if (result) {
 						console.log('SUCCESS, redirecting to /home')
-						res.send({ authenticated: true })
+						// put username and userIf in the session
+						if (req.session) {
+							req.session.user = {
+								userId: user.userid,
+								username: user.username
+							}
+						}
+
+						res.send({ authenticated: true, user: username })
 						// res.status(number).send('message')
 					} else {
 						console.log('Invalid username or password')
