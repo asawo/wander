@@ -1,13 +1,14 @@
-const express = require('express')
-const app = express()
-const path = require('path')
-const bodyParser = require('body-parser')
+import * as express from 'express'
+import * as path from 'path'
+import * as bodyParser from 'body-parser'
+import * as bcrypt from 'bcrypt'
+import * as session from 'express-session'
 const pgp = require('pg-promise')()
+
 const CONNECTION_STRING = 'postgres://localhost:5432/wander' // or process.env.blah
 const db = pgp(CONNECTION_STRING)
-const bcrypt = require('bcrypt')
 const SALT_ROUNDS = 10
-const session = require('express-session')
+const app = express()
 
 app.use(bodyParser.json())
 app.use(
