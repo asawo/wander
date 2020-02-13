@@ -5,7 +5,9 @@ import * as bcrypt from 'bcrypt'
 import * as session from 'express-session'
 const pgp = require('pg-promise')()
 
-const CONNECTION_STRING = 'postgres://localhost:5432/wander' // or process.env.blah
+const PORT = process.env.PORT || 3000
+const CONNECTION_STRING =
+	process.env.DATABASE_URL || 'postgres://localhost:5432/wander'
 const db = pgp(CONNECTION_STRING)
 const SALT_ROUNDS = 10
 const app = express()
@@ -18,14 +20,12 @@ app.use(
 		saveUninitialized: false
 	})
 )
-
-// Serve signin.html page
 app.use('/', express.static(path.join(__dirname, '../client')))
+
 app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '../client/signup.html'))
 })
 
-// Serve home.html page
 app.get('/home', (req, res) => {
 	if (req.session.user) {
 		res.sendFile(path.join(__dirname, '../client/home.html'))
@@ -102,7 +102,6 @@ app.post('/signup', (req, res) => {
 	)
 })
 
-const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
 	console.log(`Server is listening at :${PORT}`)
 })
