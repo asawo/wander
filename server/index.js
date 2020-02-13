@@ -1,8 +1,8 @@
-import * as express from 'express'
-import * as path from 'path'
-import * as bodyParser from 'body-parser'
-import * as bcrypt from 'bcrypt'
-import * as session from 'express-session'
+const express = require('express')
+const path = require('path')
+const bodyParser = require('body-parser')
+const bcrypt = require('bcrypt')
+const session = require('express-session')
 const pgp = require('pg-promise')()
 
 const PORT = process.env.PORT || 3000
