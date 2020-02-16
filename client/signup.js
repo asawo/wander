@@ -11,7 +11,10 @@ async function postData(url = '', data = {}) {
 		body: JSON.stringify(data)
 	})
 
-	return await response.json()
+	let status = response.status
+	let res = await response.json()
+
+	return { status: status, response: res }
 }
 
 // Log in
@@ -23,15 +26,19 @@ signUpForm.addEventListener('submit', e => {
 		password: e.target.elements[1].value
 	}
 
-	postData('../signup', signUpFormData).then(data => {
-		if (data.registration === 'SUCCESS') {
-			// show success message and close modal
-			$('.sign-up-success').show()
-		} else {
-			// show alert message
-			$('.sign-up-alert').show()
-		}
-	})
+	const secondPassword = e.target.elements[2].value
+
+	if (signUpFormData.password === secondPassword) {
+		postData('../signup', signUpFormData).then(data => {
+			if (data.status === 200) {
+				$('.sign-up-success').show()
+			} else {
+				$('.sign-up-alert').show()
+			}
+		})
+	} else {
+		$('.wrong-password').show()
+	}
 })
 
 // Registration
@@ -44,14 +51,11 @@ signInForm.addEventListener('submit', e => {
 	}
 
 	postData('../signin', signInFormData).then(data => {
-		if (data.authenticated === true) {
+		console.log(data)
+		if (data.status === 200) {
 			window.location.replace('/home')
-			console.log(data.url)
 		} else {
-			console.log(data)
 			$('.sign-in-alert').show()
 		}
 	})
 })
-
-module.exports = postData

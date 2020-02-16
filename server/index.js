@@ -48,8 +48,8 @@ app.post('/signin', (req, res) => {
 			if (user) {
 				bcrypt.compare(password, user.password, function(error, result) {
 					if (result) {
-						console.log('SUCCESS, redirecting to /home')
-						// put username and userIf in the session
+						console.log('SUCCESS, creating session and redirecting to /home')
+
 						if (req.session) {
 							req.session.user = {
 								userId: user.userid,
@@ -57,19 +57,18 @@ app.post('/signin', (req, res) => {
 							}
 						}
 
-						res.send({ authenticated: true, user: username })
+						res.status(200).send({ authenticated: true, user: username })
 						// res.status(number).send('message')
 					} else {
-						console.log('Invalid username or password')
-						res.send({ message: 'Invalid username or password' })
+						res.status(400).send({ message: 'Invalid username or password' })
 					}
 				})
 			} else {
-				console.log('Invalid username or password')
-				res.send({ message: 'Invalid username or password' })
+				res.status(400).send({ message: 'Invalid username or password' })
 			}
 		})
-		.catch(e => console.log(e))
+		.catch(e => console.error(e)) // change
+	// test API routes, db controllers, integration with db (E2E, unit and integration test)
 })
 
 // Register users
@@ -80,7 +79,7 @@ app.post('/signup', (req, res) => {
 	db.oneOrNone('SELECT userid FROM users WHERE username = $1', [username]).then(
 		user => {
 			if (user) {
-				res.send({ message: `User ${username} already exists` })
+				res.status(400).send({ message: `User ${username} already exists` })
 				// Render the above message on page
 			} else {
 				bcrypt.hash(password, SALT_ROUNDS, function(error, hash) {
@@ -91,7 +90,7 @@ app.post('/signup', (req, res) => {
 						])
 							.then(() => {
 								// Action after creating the account
-								res.send({ registration: 'SUCCESS' })
+								res.status(200).send({ registration: 'SUCCESS' })
 								console.log(`User created: ${username}`)
 							})
 							.catch(e => console.log(e))
