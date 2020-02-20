@@ -29,15 +29,15 @@
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav">
 					<li class="nav-item active">
-						<a class="nav-link" href="#"
-							>Timeline <span class="sr-only">(current)</span></a
+						<a class="nav-link" href="/home"
+							>Timeline </a
 						>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="#">Wolfbox</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/users/add-doggos">Add doggos</a>
+						<a class="nav-link" href="/users/add-doggos">Add doggos<span class="sr-only">(current)</span></a>
 					</li>
 					<li class="nav-item dropdown">
 						<a
@@ -59,9 +59,17 @@
 			</div>
 		</nav>
 
-		<div class="container text-center mt-4"><h1>Main content</h1></div>
+		<div class="container text-center mt-4"><h1>Add your doggo!</h1></div>
 		<div class="container text-center">
-			<img src="./assets/doggo.png" style="height: 35vh" />
+      <form id="signInForm" class="form-group">
+        <input
+          type="text"
+          name="doggoname"
+          class="form-control mt-3"
+          placeholder="Doggo's name"
+          required
+        />
+        <textarea class="form-control mt-3" placeholder="Describe your doggo!"id="exampleFormControlTextarea1" rows="3"></textarea>
 		</div>
 
 		<footer class="mt-5 p-3 text-center bg-dark text-light">

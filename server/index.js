@@ -35,6 +35,11 @@ app.get('/home', (req, res) => {
 	}
 })
 
+// add doggos
+app.get('/users/add-doggos', (req, res) => {
+	res.sendFile(path.join(__dirname, '../client/add-doggos.html'))
+})
+
 // Sign in page
 app.post('/signin', (req, res) => {
 	let username = req.body.username
