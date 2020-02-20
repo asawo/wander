@@ -23,7 +23,7 @@ describe('page load', function() {
 })
 
 describe('Check DB', function() {
-	it('Connecting to psql db', function(done) {
+	it('Should connect to psql db', function(done) {
 		db.any('SELECT username FROM users')
 			.then(res => {
 				res[0].username.should.equal('polly')
