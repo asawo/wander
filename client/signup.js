@@ -53,7 +53,7 @@ signInForm.addEventListener('submit', e => {
 	postData('../signin', signInFormData).then(data => {
 		console.log(data)
 		if (data.status === 200) {
-			window.location.replace('/home')
+			window.location.replace('/users/home')
 		} else {
 			$('.sign-in-alert').show()
 		}

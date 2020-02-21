@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '../client/signup.html'))
 })
 
-app.get('/home', (req, res) => {
+app.get('/users/home', (req, res) => {
 	if (req.session.user) {
 		res.sendFile(path.join(__dirname, '../client/home.html'))
 		// res.send({ username: req.session.user.username })
@@ -53,7 +53,9 @@ app.post('/signin', (req, res) => {
 			if (user) {
 				bcrypt.compare(password, user.password, function(error, result) {
 					if (result) {
-						console.log('SUCCESS, creating session and redirecting to /home')
+						console.log(
+							'SUCCESS, creating session and redirecting to /users/home'
+						)
 
 						if (req.session) {
 							req.session.user = {
