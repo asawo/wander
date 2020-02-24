@@ -6,6 +6,19 @@ const SALT_ROUNDS = 10
 
 router.use('/', express.static(path.join(__dirname, '../client')))
 
+router.get('/logout', (req, res, next) => {
+	console.log(req.session.user)
+	if (req.session) {
+		req.session.destroy(error => {
+			if (error) {
+				next(error)
+			} else {
+				res.redirect('/')
+			}
+		})
+	}
+})
+
 // Sign in page
 router.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '../client/signup.html'))

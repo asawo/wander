@@ -1,5 +1,3 @@
-const newDog = document.querySelector('#newDog')
-
 async function postData(url = '', data = {}) {
 	const response = await fetch(url, {
 		method: 'POST',
@@ -15,6 +13,9 @@ async function postData(url = '', data = {}) {
 
 	return { status: status, response: res }
 }
+
+// Add new dog
+const newDog = document.querySelector('#newDog')
 
 newDog.addEventListener('submit', e => {
 	e.preventDefault()
@@ -48,4 +49,17 @@ newDog.addEventListener('submit', e => {
 			// $('.doggo-exists').show() // doggo exists!
 		}
 	})
+})
+
+// Log out
+const logOutBtn = document.querySelector('#logOut')
+
+logOutBtn.addEventListener('click', async e => {
+	let response = await fetch('/logout')
+
+	if (response.ok) {
+		window.location.replace(response.url)
+	} else {
+		alert('HTTP-Error: ' + response.status)
+	}
 })
