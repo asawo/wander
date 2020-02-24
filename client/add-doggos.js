@@ -20,13 +20,20 @@ const newDog = document.querySelector('#newDog')
 newDog.addEventListener('submit', e => {
 	e.preventDefault()
 
-	console.log(e)
-
 	const doggoProfile = {
 		doggoName: e.target.elements[0].value,
 		// doggoImage: e.target.elements[1].files[0],
 		description: e.target.elements[2].value
 	}
+
+	postData('../users/add-doggos', doggoProfile).then(data => {
+		if (data.status === 200) {
+			console.log(data)
+			// $('.doggo-created').show() // success label for creating doggo
+		} else {
+			// $('.doggo-exists').show() // doggo exists!
+		}
+	})
 
 	// const checkImage = file => {
 	// 	let imageType = /image.*/
@@ -39,16 +46,6 @@ newDog.addEventListener('submit', e => {
 	// 	}
 	// }
 	// console.log(checkImage(doggoProfile.doggoImage))
-	console.log(doggoProfile)
-
-	postData('../users/add-doggos', doggoProfile).then(data => {
-		if (data.status === 200) {
-			console.log(data)
-			// $('.doggo-created').show() // success label for creating doggo
-		} else {
-			// $('.doggo-exists').show() // doggo exists!
-		}
-	})
 })
 
 // Log out
