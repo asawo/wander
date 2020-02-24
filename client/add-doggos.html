@@ -62,7 +62,9 @@
     <div class="container text-center mt-4"><h1>Add your doggo!</h1></div>
 		<div class="container text-center">
       <form id="newDog" class="form-group">
-        <input
+        <div class="row">
+          <div class="col-sm">
+            <input
           type="text"
           name="doggoname"
           id="doggoName"
@@ -70,15 +72,18 @@
           placeholder="Doggo's name"
           required
         />
-        
-        <div class="input-group mt-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
           </div>
-          <div class="custom-file">
-            <input type="file" class="custom-file-input" id="inputGroupFile01"
-              aria-describedby="inputGroupFileAddon01">
-            <label class="text-left custom-file-label" for="inputGroupFile01">Choose profile pic</label>
+          <div class="col-sm">
+            <div class="input-group mt-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="inputGroupFile01"
+                  aria-describedby="inputGroupFileAddon01">
+                <label class="text-left custom-file-label" for="inputGroupFile01">Upload profile pic!</label>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -90,7 +95,7 @@
           class="btn btn-lg btn-block btn-primary mt-4"
         />
       </div>
-      </div>
+      </form>
 
 		<footer class="mt-5 p-3 text-center bg-dark text-light">
 			<span>
@@ -116,6 +121,6 @@
 			integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
 			crossorigin="anonymous"
 		></script>
-		<script src="./add-doggos.js"></script> <!--not sure why it can't find the file-->
+		<script src="./add-doggos.js"></script>
 	</body>
 </html>
