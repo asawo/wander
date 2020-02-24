@@ -40,7 +40,7 @@ newDog.addEventListener('submit', e => {
 	// console.log(checkImage(doggoProfile.doggoImage))
 	console.log(doggoProfile)
 
-	postData('../users/add-doggo', doggoProfile).then(data => {
+	postData('../users/add-doggos', doggoProfile).then(data => {
 		if (data.status === 200) {
 			console.log(data)
 			// $('.doggo-created').show() // success label for creating doggo
