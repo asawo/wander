@@ -32,6 +32,35 @@ describe('Check page load', function() {
 		})
 })
 
+describe('Check login', function() {
+	it('Should be able to login with test user', done => {
+		chai
+			.request(server)
+			.post('/signin')
+			.send({
+				username: 'asawo', // probs need to not do this
+				password: 'test'
+			})
+			.end(function(err, res) {
+				res.should.have.status(301)
+				done()
+			})
+	})
+	it('Should return 400 error with invalid user', done => {
+		chai
+			.request(server)
+			.post('/signin')
+			.send({
+				username: 'test1', // probs need to not do this
+				password: 'test1'
+			})
+			.end(function(err, res) {
+				res.should.have.status(400)
+				done()
+			})
+	})
+})
+
 describe('Check DB', function() {
 	// before(function(done){
 	//   ...
