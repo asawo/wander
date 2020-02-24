@@ -29,7 +29,7 @@ newDog.addEventListener('submit', e => {
 	postData('../users/add-doggos', doggoProfile).then(data => {
 		if (data.status === 200) {
 			console.log(data)
-			// $('.doggo-created').show() // success label for creating doggo
+			$('.doggo-created').show() // success label for creating doggo
 		} else {
 			// $('.doggo-exists').show() // doggo exists!
 		}
