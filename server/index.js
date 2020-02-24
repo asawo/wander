@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const bcrypt = require('bcrypt')
 const session = require('express-session')
 const pgp = require('pg-promise')()
+const userRoutes = require('../routes/users')
 
 const PORT = process.env.PORT || 3000
 const CONNECTION_STRING =
@@ -13,6 +14,7 @@ const SALT_ROUNDS = 10
 const app = express()
 
 app.use(bodyParser.json())
+
 app.use(
 	session({
 		secret: 'blahblah',
@@ -20,24 +22,13 @@ app.use(
 		saveUninitialized: false
 	})
 )
+
+app.use('/users', userRoutes)
+
 app.use('/', express.static(path.join(__dirname, '../client')))
 
 app.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '../client/signup.html'))
-})
-
-app.get('/users/home', (req, res) => {
-	if (req.session.user) {
-		res.sendFile(path.join(__dirname, '../client/home.html'))
-		// res.send({ username: req.session.user.username })
-	} else {
-		res.sendFile(path.join(__dirname, '../client/signup.html'))
-	}
-})
-
-// add doggos
-app.get('/users/add-doggos', (req, res) => {
-	res.sendFile(path.join(__dirname, '../client/add-doggos.html'))
 })
 
 // Sign in page
