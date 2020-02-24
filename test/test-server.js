@@ -10,8 +10,8 @@ const should = chai.should()
 
 chai.use(chaiHttp)
 
-describe('page load', function() {
-	it('Should return 200 for / GET', function(done) {
+describe('Check page load', function() {
+	it('Should return 200 for / GET', done => {
 		chai
 			.request(server)
 			.get('/')
@@ -19,11 +19,27 @@ describe('page load', function() {
 				res.should.have.status(200)
 				done()
 			})
-	})
+	}),
+		it('Should redirect to / for /users/home GET', done => {
+			chai
+				.request(server)
+				.get('/users/home')
+				.redirects(0)
+				.end(function(err, res) {
+					res.should.redirectTo('/')
+					done()
+				})
+		})
 })
 
 describe('Check DB', function() {
-	it('Should connect to psql db', function(done) {
+	// before(function(done){
+	//   ...
+	// });
+	// after(function(done){
+	//   ...
+	// });
+	it('Should connect to psql db', done => {
 		db.any('SELECT username FROM users')
 			.then(res => {
 				res[0].username.should.equal('polly')
