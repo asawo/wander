@@ -29,7 +29,11 @@ router.post('/add-doggos', (req, res) => {
 	let doggoImage = req.body.doggoImage
 	let description = req.body.description
 
-	res.status(200).send({ message: 'hi' })
+	res.status(200).send({
+		username: username,
+		doggoName: doggoName,
+		description: description
+	})
 })
 
 module.exports = router
