@@ -22,6 +22,15 @@ router.get('/home', (req, res) => {
 	}
 })
 
+// my doggos
+router.get('/my-doggos', (req, res) => {
+	if (req.session.user) {
+		res.sendFile(path.join(__dirname, '../client/my-doggos.html'))
+	} else {
+		res.redirect('/')
+	}
+})
+
 // add doggos
 router.get('/add-doggos', (req, res) => {
 	if (req.session.user) {
