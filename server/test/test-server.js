@@ -1,6 +1,6 @@
 const chai = require('chai')
 const chaiHttp = require('chai-http')
-const server = require('../server/index')
+const server = require('../index.js')
 const pgp = require('pg-promise')()
 const CONNECTION_STRING =
 	process.env.DATABASE_URL || 'postgres://localhost:5432/wander'

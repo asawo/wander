@@ -1,7 +1,6 @@
 const express = require('express')
 const path = require('path')
 const bodyParser = require('body-parser')
-const bcrypt = require('bcrypt')
 const session = require('express-session')
 const userRoutes = require('./routes/users')
 const indexRoutes = require('./routes/index')
