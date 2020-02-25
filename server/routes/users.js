@@ -1,6 +1,11 @@
 const express = require('express')
+const session = require('express-session')
 const router = express.Router()
 const path = require('path')
+const CONNECTION_STRING =
+	process.env.DATABASE_URL || 'postgres://localhost:5432/wander'
+const pgp = require('pg-promise')()
+const db = pgp(CONNECTION_STRING)
 // const bodyParser = require('body-parser')
 
 // to handle uploads
@@ -12,11 +17,11 @@ const path = require('path')
 // router.use(bodyParser.json())
 // router.use(busboyBodyParser())
 
-router.use('/', express.static(path.join(__dirname, '../client')))
+router.use('/', express.static(path.join(__dirname, '../../client')))
 
 router.get('/home', (req, res) => {
 	if (req.session.user) {
-		res.sendFile(path.join(__dirname, '../client/home.html'))
+		res.sendFile(path.join(__dirname, '../../client/home.html'))
 	} else {
 		res.redirect('/')
 	}
@@ -25,7 +30,7 @@ router.get('/home', (req, res) => {
 // my doggos
 router.get('/my-doggos', (req, res) => {
 	if (req.session.user) {
-		res.sendFile(path.join(__dirname, '../client/my-doggos.html'))
+		res.sendFile(path.join(__dirname, '../../client/my-doggos.html'))
 	} else {
 		res.redirect('/')
 	}
@@ -34,7 +39,7 @@ router.get('/my-doggos', (req, res) => {
 // add doggos
 router.get('/add-doggos', (req, res) => {
 	if (req.session.user) {
-		res.sendFile(path.join(__dirname, '../client/add-doggos.html'))
+		res.sendFile(path.join(__dirname, '../../client/add-doggos.html'))
 	} else {
 		res.redirect('/')
 	}
@@ -47,6 +52,7 @@ router.post('/add-doggos', (req, res) => {
 	// let doggoImage = req.body.doggoImage
 
 	db.none(
+		// put into config.js
 		'INSERT INTO doggos(doggoname, description, userid) VALUES($1,$2,$3)',
 		[doggoName, description, userId]
 	).then(() => {

@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev": "nodemon server/index.js",
 		"test": "mocha",
-		"local": "heroku local web"
+		"local": "heroku local web",
+		"pkill": "sudo pkill -u postgres"
 	},
 	"jest": {
 		"testEnvironment": "node",
