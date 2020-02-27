@@ -9,6 +9,7 @@ const db = pgp(CONNECTION_STRING)
 module.exports = {
 	// check db for existing user
 	checkUser: function(username) {
-		db.oneOrNone('SELECT userid FROM users WHERE username = $1', [username])
+		console.log(username)
+		// db.oneOrNone('SELECT userid FROM users WHERE username = $1', [username])
 	}
 }
