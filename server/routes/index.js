@@ -7,7 +7,9 @@ const db = pgp(CONNECTION_STRING)
 const router = express.Router()
 const path = require('path')
 const SALT_ROUNDS = 10
+// const dbController = require('dbcontroller')
 
+// handle logout
 router.get('/logout', (req, res, next) => {
 	console.log(req.session.user)
 	if (req.session) {
@@ -26,7 +28,7 @@ router.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '../../client/signup.html'))
 })
 
-// create session
+// create session when sign in is successful at /signin endpoint
 const createSession = (user, res, req, username, password) => {
 	if (user) {
 		bcrypt.compare(password, user.password, function(error, result) {
@@ -61,6 +63,7 @@ router.post('/signin', (req, res) => {
 		.catch(e => console.error(e))
 })
 
+// create account passed into the /signup endpoint
 const createAccount = (user, req, res, username, password) => {
 	if (user) {
 		res.status(400).send({ message: `User ${username} already exists` })
@@ -86,6 +89,8 @@ router.post('/signup', (req, res) => {
 	let username = req.body.username
 	let password = req.body.password
 
+	// dbController
+	// 	.checkUser(username)
 	db.oneOrNone('SELECT userid FROM users WHERE username = $1', [
 		username
 	]).then(user => createAccount(user, req, res, username, password))
