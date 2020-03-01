@@ -7,7 +7,7 @@ const db = pgp(CONNECTION_STRING)
 const router = express.Router()
 const path = require('path')
 const SALT_ROUNDS = 10
-const dbController = require('../db/dbcontroller.js ')
+const dbController = require('../db/dbcontroller.js')
 
 // handle logout
 router.get('/logout', (req, res, next) => {
