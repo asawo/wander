@@ -19,7 +19,9 @@ const createSession = (user, res, req, username, password) => {
 				}
 				res.status(301).send({ authenticated: true, user: username })
 			} else {
-				res.status(400).send({ message: 'Invalid username or password' })
+				res
+					.status(400)
+					.send({ message: 'Invalid username or password', error: error })
 			}
 		})
 	} else {
@@ -56,9 +58,9 @@ module.exports = {
 		let username = req.body.username
 		let password = req.body.password
 
-		db.oneOrNone('SELECT userid FROM users WHERE username = $1', [
-			username
-		]).then(user => createAccount(user, req, res, username, password))
+		db.oneOrNone('SELECT userid FROM users WHERE username = $1', [username])
+			.then(user => createAccount(user, req, res, username, password))
+			.catch(e => console.error(e))
 	},
 	signInUser: function(req, res) {
 		let username = req.body.username
@@ -79,8 +81,11 @@ module.exports = {
 		db.none(
 			'INSERT INTO doggos(doggoname, description, userid) VALUES($1,$2,$3)',
 			[doggoName, description, userId]
-		).then(() => {
-			res.status(200).send({ message: 'SUCCESS' })
-		})
+		)
+			.then(() => {
+				res.status(200).send({ message: 'SUCCESS' })
+				console.log(`Added ${doggoName}!`)
+			})
+			.catch(e => console.error(e))
 	}
 }

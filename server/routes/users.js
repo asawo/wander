@@ -7,7 +7,7 @@ router.use('/', express.static(path.join(__dirname, '../../client')))
 
 router.use('/', (req, res, next) => {
 	if (!req.session.user) res.redirect('/')
-	next()
+	next() // causing "can't set headers after they are sent" error
 })
 
 // Serve home.html, or redirect to / if no session
