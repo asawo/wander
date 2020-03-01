@@ -1,8 +1,4 @@
 const express = require('express')
-<<<<<<< HEAD
-=======
-// const session = require('express-session')
->>>>>>> c30915a1ab6a0b4721065e5ec5aff930374d379b
 const router = express.Router()
 const path = require('path')
 const db = require('../db/dbcontroller.js')

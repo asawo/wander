@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const bcrypt = require('bcrypt')
 const SALT_ROUNDS = 10
 const pgp = require('pg-promise')()
