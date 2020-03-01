@@ -1,106 +1,30 @@
 const express = require('express')
-const session = require('express-session')
 const router = express.Router()
 const path = require('path')
-const CONNECTION_STRING =
-	process.env.DATABASE_URL || 'postgres://localhost:5432/wander'
-const pgp = require('pg-promise')()
-const db = pgp(CONNECTION_STRING)
-// const bodyParser = require('body-parser')
-
-// to handle uploads
-// const Busboy = require('busboy')
-// const busboy = require('connect-busboy')
-// const busboyBodyParser = require('busboy-body-parser')
-// router.use(busboy())
-// router.use(bodyParser.urlencoded({ extended: true }))
-// router.use(bodyParser.json())
-// router.use(busboyBodyParser())
+const db = require('../db/dbcontroller.js')
 
 router.use('/', express.static(path.join(__dirname, '../../client')))
 
+router.use('/', (req, res, next) => {
+	if (!req.session.user) res.redirect('/')
+	next()
+})
+
+// Serve home.html, or redirect to / if no session
 router.get('/home', (req, res) => {
-	if (req.session.user) {
-		res.sendFile(path.join(__dirname, '../../client/home.html'))
-	} else {
-		res.redirect('/')
-	}
+	res.sendFile(path.join(__dirname, '../../client/home.html'))
 })
 
-// my doggos
+// my doggos page
 router.get('/my-doggos', (req, res) => {
-	if (req.session.user) {
-		res.sendFile(path.join(__dirname, '../../client/my-doggos.html'))
-	} else {
-		res.redirect('/')
-	}
+	res.sendFile(path.join(__dirname, '../../client/my-doggos.html'))
 })
 
-// add doggos
+// add doggos page
 router.get('/add-doggos', (req, res) => {
-	if (req.session.user) {
-		res.sendFile(path.join(__dirname, '../../client/add-doggos.html'))
-	} else {
-		res.redirect('/')
-	}
+	res.sendFile(path.join(__dirname, '../../client/add-doggos.html'))
 })
 
-router.post('/add-doggos', (req, res) => {
-	let userId = req.session.user.userId
-	let doggoName = req.body.doggoName
-	let description = req.body.description
-	// let doggoImage = req.body.doggoImage
-
-	db.none(
-		// put into config.js
-		'INSERT INTO doggos(doggoname, description, userid) VALUES($1,$2,$3)',
-		[doggoName, description, userId]
-	).then(() => {
-		res.status(200).send({ message: 'SUCCESS' })
-	})
-})
-
-router.post('/add-doggos', (req, res) => {
-	let username = req.session.username
-	let doggoName = req.body.doggoName
-	// let doggoImage = req.body.doggoImage
-	let description = req.body.description
-
-	res.status(200).send({
-		username: username,
-		doggoName: doggoName,
-		// doggoImage: req.body.doggoImage,
-		description: description
-	})
-})
-
-// upload image
-// router.post('/add-doggos/upload', (req, res, next) => {
-// 	// This grabs the additional parameters so in this case passing
-// 	// in "element1" with a value.
-// 	const doggoImage = req.body.doggoImage
-// 	var busboy = new Busboy({ headers: req.headers })
-// 	// The file upload has completed
-// 	busboy.on('finish', () => {
-// 		console.log('Upload finished')
-// 		// Your files are stored in req.files. In this case,
-// 		// you only have one and it's req.files.element2:
-// 		// This returns:
-// 		// {c
-// 		//    element2: {
-// 		//      data: ...contents of the file...,
-// 		//      name: 'Example.jpg',
-// 		//      encoding: '7bit',
-// 		//      mimetype: 'image/png',
-// 		//      truncated: false,
-// 		//      size: 959480
-// 		//    }
-// 		// }
-// 		// Grabs your file object from the request.
-// 		const file = req.files.doggoImageUploaded
-// 		console.log(file)
-// 	})
-// 	req.pipe(busboy)
-// })
+router.post('/add-doggos', db.addDoggo)
 
 module.exports = router
