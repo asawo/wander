@@ -4,6 +4,8 @@ const pgp = require('pg-promise')()
 const CONNECTION_STRING =
 	process.env.DATABASE_URL || 'postgres://localhost:5432/wander'
 const db = pgp(CONNECTION_STRING)
+const session = require('express-session')
+const path = require('path')
 
 const createSession = (user, res, req, username, password) => {
 	if (user) {
@@ -49,9 +51,9 @@ const createAccount = (user, req, res, username, password) => {
 	}
 }
 
-// ################################################
+//################################################
 // DB queries and handling
-// ################################################
+//################################################
 
 module.exports = {
 	registerUser: function(req, res) {
@@ -75,8 +77,7 @@ module.exports = {
 	},
 	addDoggo: function(req, res) {
 		let userId = req.session.user.userId
-		let doggoName = req.body.doggoName
-		let description = req.body.description
+		console.log(userId)
 
 		db.none(
 			'INSERT INTO doggos(doggoname, description, userid) VALUES($1,$2,$3)',
@@ -85,6 +86,18 @@ module.exports = {
 			.then(() => {
 				res.status(200).send({ message: 'SUCCESS' })
 				console.log(`Added ${doggoName}!`)
+			})
+			.catch(e => console.error(e))
+	},
+	loadMyDoggos: function(req, res) {
+		console.log(req.session.user)
+		let userId = req.session.user.userId
+
+		db.any('SELECT doggoname, description FROM doggos WHERE userid = $1', [
+			userId
+		])
+			.then(doggos => {
+				res.status(200).send({ doggos: doggos })
 			})
 			.catch(e => console.error(e))
 	}

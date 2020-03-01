@@ -4,7 +4,6 @@ const path = require('path')
 const db = require('../db/dbcontroller.js')
 
 router.use('/', express.static(path.join(__dirname, '../../client')))
-
 router.use('/', (req, res, next) => {
 	if (!req.session.user) res.redirect('/')
 	next() // causing "can't set headers after they are sent" error
@@ -19,6 +18,8 @@ router.get('/home', (req, res) => {
 router.get('/my-doggos', (req, res) => {
 	res.sendFile(path.join(__dirname, '../../client/my-doggos.html'))
 })
+
+router.get('/load-my-doggos', db.loadMyDoggos)
 
 // add doggos page
 router.get('/add-doggos', (req, res) => {
