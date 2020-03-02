@@ -11,18 +11,24 @@ logOutBtn.addEventListener('click', async e => {
 	}
 })
 
+// fetch doggos and display them on the page
 const myDoggos = document.querySelector('#myDoggos')
 
-const addItems = (doggoName, description) => {
-	myDoggos.append('<div class="doggos">' + doggoName + description + '</div>')
+const addDoggos = (doggoName, description) => {
+	myDoggos.innerHTML += `<div class="doggos"><h5>Doggo name: ${doggoName}. Description: ${description}.</h5></div> \n`
 }
 
 async function loadDoggos() {
 	let response = await fetch('/users/load-my-doggos')
-	console.log('response: ', response)
-	if (response.ok) {
-		let resJson = await response.json()
-		console.log('response.json: ', resJson.doggos)
+	let resJson = await response.json()
+
+	if (response.ok && resJson.doggos.length > 0) {
+		myDoggos.innerHTML = ''
+		resJson.doggos.forEach(doggo => {
+			addDoggos(doggo.doggoname, doggo.description)
+		})
+	} else if (response.ok && resJson.doggos.length === 0) {
+		console.log('HTTP-status: ' + response.status + ' but no data')
 	} else {
 		alert('HTTP-Error: ' + response.status)
 	}
