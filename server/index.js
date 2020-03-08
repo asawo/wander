@@ -5,8 +5,12 @@ const session = require('express-session')
 const userRoutes = require('./routes/users')
 const indexRoutes = require('./routes/index')
 const PORT = process.env.PORT || 3000
-process.env.DATABASE_URL || 'postgres://localhost:5432/wander'
 const app = express()
+
+const dotenv = require('dotenv').config()
+if (dotenv.error) {
+	throw result.error
+}
 
 app.use(bodyParser.json())
 
