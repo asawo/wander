@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const path = require('path')
-const db = require('../db/dbcontroller.js')
+const db = require('../controllers/dbcontroller.js')
 
 router.use('/', express.static(path.join(__dirname, '../../client')))
 router.use('/', (req, res, next) => {

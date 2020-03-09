@@ -55,51 +55,59 @@ const createAccount = (user, req, res, username, password) => {
 // DB queries and handling
 //################################################
 
+const registerUser = (req, res) => {
+	let username = req.body.username
+	let password = req.body.password
+
+	db.oneOrNone('SELECT userid FROM users WHERE username = $1', [username])
+		.then(user => createAccount(user, req, res, username, password))
+		.catch(e => console.error(e))
+}
+
+const signInUser = (req, res) => {
+	let username = req.body.username
+	let password = req.body.password
+
+	db.oneOrNone(
+		'SELECT userid, username, password FROM users WHERE username = $1',
+		[username]
+	)
+		.then(user => createSession(user, res, req, username, password))
+		.catch(e => console.error(e))
+}
+
+const addDoggo = (req, res) => {
+	let userId = req.session.user.userId
+	let doggoName = req.body.doggoName
+	let description = req.body.description
+	console.log({ userID: userId, doggoName: doggoName })
+
+	db.none(
+		'INSERT INTO doggos(doggoname, description, userid) VALUES($1,$2,$3)',
+		[doggoName, description, userId]
+	)
+		.then(() => {
+			res.status(200).send({ message: 'SUCCESS' })
+			console.log(`Added ${doggoName}!`)
+		})
+		.catch(e => console.error(e))
+}
+
+const loadMyDoggos = (req, res) => {
+	let userId = req.session.user.userId
+
+	db.any('SELECT doggoname, description FROM doggos WHERE userid = $1', [
+		userId
+	])
+		.then(doggos => {
+			res.status(200).send({ doggos: doggos })
+		})
+		.catch(e => console.error(e))
+}
+
 module.exports = {
-	registerUser: function(req, res) {
-		let username = req.body.username
-		let password = req.body.password
-
-		db.oneOrNone('SELECT userid FROM users WHERE username = $1', [username])
-			.then(user => createAccount(user, req, res, username, password))
-			.catch(e => console.error(e))
-	},
-	signInUser: function(req, res) {
-		let username = req.body.username
-		let password = req.body.password
-
-		db.oneOrNone(
-			'SELECT userid, username, password FROM users WHERE username = $1',
-			[username]
-		)
-			.then(user => createSession(user, res, req, username, password))
-			.catch(e => console.error(e))
-	},
-	addDoggo: function(req, res) {
-		let userId = req.session.user.userId
-		let doggoName = req.body.doggoName
-		let description = req.body.description
-		console.log({ userID: userId, doggoName: doggoName })
-
-		db.none(
-			'INSERT INTO doggos(doggoname, description, userid) VALUES($1,$2,$3)',
-			[doggoName, description, userId]
-		)
-			.then(() => {
-				res.status(200).send({ message: 'SUCCESS' })
-				console.log(`Added ${doggoName}!`)
-			})
-			.catch(e => console.error(e))
-	},
-	loadMyDoggos: function(req, res) {
-		let userId = req.session.user.userId
-
-		db.any('SELECT doggoname, description FROM doggos WHERE userid = $1', [
-			userId
-		])
-			.then(doggos => {
-				res.status(200).send({ doggos: doggos })
-			})
-			.catch(e => console.error(e))
-	}
+	registerUser: registerUser,
+	signInUser: signInUser,
+	addDoggo: addDoggo,
+	loadMyDoggos: loadMyDoggos
 }
