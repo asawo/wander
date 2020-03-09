@@ -7,11 +7,6 @@ const indexRoutes = require('./routes/index')
 const PORT = process.env.PORT || 3000
 const app = express()
 
-const dotenv = require('dotenv').config()
-if (dotenv.error) {
-	throw result.error
-}
-
 app.use(bodyParser.json())
 
 app.use('/', express.static(path.join(__dirname, '../client')))

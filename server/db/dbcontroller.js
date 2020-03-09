@@ -4,8 +4,8 @@ const pgp = require('pg-promise')()
 const CONNECTION_STRING =
 	process.env.DATABASE_URL || 'postgres://localhost:5432/wander'
 const db = pgp(CONNECTION_STRING)
-const session = require('express-session')
-const path = require('path')
+// const session = require('express-session')
+// const path = require('path')
 
 const createSession = (user, res, req, username, password) => {
 	if (user) {
