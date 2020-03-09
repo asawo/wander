@@ -77,7 +77,9 @@ module.exports = {
 	},
 	addDoggo: function(req, res) {
 		let userId = req.session.user.userId
-		console.log(userId)
+		let doggoName = req.body.doggoName
+		let description = req.body.description
+		console.log({ userID: userId, doggoName: doggoName })
 
 		db.none(
 			'INSERT INTO doggos(doggoname, description, userid) VALUES($1,$2,$3)',
@@ -90,7 +92,6 @@ module.exports = {
 			.catch(e => console.error(e))
 	},
 	loadMyDoggos: function(req, res) {
-		console.log(req.session.user)
 		let userId = req.session.user.userId
 
 		db.any('SELECT doggoname, description FROM doggos WHERE userid = $1', [
