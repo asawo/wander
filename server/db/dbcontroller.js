@@ -4,8 +4,6 @@ const pgp = require('pg-promise')()
 const CONNECTION_STRING =
 	process.env.DATABASE_URL || 'postgres://localhost:5432/wander'
 const db = pgp(CONNECTION_STRING)
-// const session = require('express-session')
-// const path = require('path')
 
 const createSession = (user, res, req, username, password) => {
 	if (user) {
@@ -77,7 +75,10 @@ module.exports = {
 	},
 	addDoggo: function(req, res) {
 		let userId = req.session.user.userId
-		console.log(userId)
+		let doggoName = req.body.doggoName
+		let description = req.body.description
+		console.log({ userID: userId, doggoName: doggoName })
+		// let doggoImage = req.body.doggoImage
 
 		db.none(
 			'INSERT INTO doggos(doggoname, description, userid) VALUES($1,$2,$3)',
