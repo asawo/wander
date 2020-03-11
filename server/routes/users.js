@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const path = require('path')
 const db = require('../controllers/dbcontroller.js')
+const s3 = require('../controllers/s3controller.js')
 
 router.use('/', (req, res, next) => {
 	if (!req.session.user) res.redirect('/')
@@ -27,6 +28,11 @@ router.get('/add-doggos', (req, res) => {
 	res.sendFile(path.join(__dirname, '../../client/add-doggos.html'))
 })
 
-router.post('/add-doggos', db.addDoggo)
+router.post('/add-doggos', (req, res) => {
+	// get the upload url from aws s3
+	s3.listBucket(req, res)
+	// make sure db.addDoggo runs after s3 returns upload url
+	db.addDoggo(req, res)
+})
 
 module.exports = router

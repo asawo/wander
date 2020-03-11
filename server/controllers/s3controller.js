@@ -1,36 +1,39 @@
 const dotenv = require('dotenv').config()
 if (dotenv.error) {
-	throw result.error
+	console.log(result.error)
 }
-
-const iamUser = process.env.iamUser
-const iamSecret = process.env.iamSecret
-// console.log(['credentials', { iamUser, iamSecret }])
 
 const AWS = require('aws-sdk')
-AWS.config.update({ region: 'ap-northeast-1' })
 
+AWS.config.update({ region: 'ap-northeast-1' })
 s3 = new AWS.S3({ apiVersion: '2006-03-01' })
 
-s3.listBuckets((err, data) => {
-	if (err) {
-		console.log('Error, ', err)
-	} else {
-		console.log('Success, ', data.Buckets)
-	}
-})
+// Function exporting just to check
+const listBucketAndObjects = () => {
+	s3.listBuckets((err, data) => {
+		if (err) {
+			console.log('Error, ', err)
+		} else {
+			console.log('Success, bucket here: ', data.Buckets)
+		}
+	})
 
-const bucketParams = {
-	Bucket: 'wander-love-images'
+	const bucketParams = {
+		Bucket: 'wander-love-images'
+	}
+
+	s3.listObjects(bucketParams, (err, data) => {
+		if (err) {
+			console.log('Error, ', err)
+		} else {
+			console.log('Success, objects here: ', data.Contents)
+		}
+	})
 }
 
-s3.listObjects(bucketParams, (err, data) => {
-	if (err) {
-		console.log('Error, ', err)
-	} else {
-		console.log('Success, ', data)
-	}
-})
+module.exports = {
+	listBucket: listBucketAndObjects
+}
 
 // const BUCKET_NAME = ''
 // const IAM_USER_KEY = ''
