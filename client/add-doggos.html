@@ -58,10 +58,10 @@
 				</ul>
 			</div>
 		</nav>
-
+<!-- Main content -->
     <div class="container text-center mt-4"><h1>Add your doggo!</h1></div>
 		<div class="container text-center">
-      <form id="newDog" class="form-group">
+      <form id="newDog" class="form-group" enctype="multipart/form-data">
         <div class="row">
           <div class="col-sm">
             <input
@@ -75,15 +75,15 @@
           </div>
           <div class="col-sm">
             <div class="input-group mt-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-              </div>
-              <div class="custom-file">
-                <input type="file" class="custom-file-input" id="inputGroupFile01"
-                  aria-describedby="inputGroupFileAddon01">
-                <label class="text-left custom-file-label" for="inputGroupFile01">Upload profile pic!</label>
-              </div>
-            </div>
+							<div class="input-group-prepend">
+								<span class="input-group-text" id="uploadFile">Upload</span>
+							</div>
+							<div class="custom-file">
+								<input type="file" class="custom-file-input" id="inputGroupFile01"
+									aria-describedby="uploadFile">
+								<label class="custom-file-label text-left" for="inputGroupFile01">Choose file</label>
+							</div>
+						</div>
           </div>
         </div>
 
