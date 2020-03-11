@@ -3,13 +3,14 @@ const router = express.Router()
 const path = require('path')
 const db = require('../controllers/dbcontroller.js')
 
-router.use('/', express.static(path.join(__dirname, '../../client')))
 router.use('/', (req, res, next) => {
 	if (!req.session.user) res.redirect('/')
-	next() // causing "can't set headers after they are sent" error
+	next()
 })
 
-// Serve home.html, or redirect to / if no session
+router.use('/', express.static(path.join(__dirname, '../../client')))
+
+// Serve home.html
 router.get('/home', (req, res) => {
 	res.sendFile(path.join(__dirname, '../../client/home.html'))
 })
