@@ -14,19 +14,6 @@ async function postData(url = '', data = {}) {
 	return { status: status, response: res }
 }
 
-const checkImage = file => {
-	let imageType = /image.*/
-	if (!file.type.match(imageType)) {
-		console.error('Choose an image file!')
-		// show error label
-	} else if (!file) {
-		console.error('Make sure to upload a pic!')
-		// show error label
-	} else {
-		return true
-	}
-}
-
 // Change file name
 $('input[type="file"]').change(function(e) {
 	var fileName = e.target.files[0].name
@@ -46,7 +33,6 @@ newDog.addEventListener('submit', e => {
 	}
 
 	console.log(e.target.elements[1].files[0])
-	console.log(checkImage(doggoProfile.doggoImage))
 
 	postData('../users/add-doggos', doggoProfile).then(data => {
 		if (data.status === 200) {
