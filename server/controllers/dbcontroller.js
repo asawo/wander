@@ -77,8 +77,9 @@ const signInUser = (req, res) => {
 const addDoggo = (req, res) => {
 	let userId = req.session.user.userId
 	let doggoName = req.body.doggoName
+	let doggoImage = req.body.doggoImage
 	let description = req.body.description
-	console.log({ userID: userId, doggoName: doggoName })
+	console.log({ userID: userId, doggoName: doggoName, doggoImage: doggoImage })
 
 	db.none(
 		'INSERT INTO doggos(doggoname, description, userid) VALUES($1,$2,$3)',
