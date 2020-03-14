@@ -1,12 +1,37 @@
 const dotenv = require('dotenv').config()
-if (dotenv.error) {
-	console.log(result.error)
+const { uuid } = require('uuidv4')
+const AWS = require('aws-sdk')
+AWS.config.update({ region: 'ap-northeast-1' })
+
+const s3 = new AWS.S3({ apiVersion: '2006-03-01' })
+
+const bucketParams = {
+	Bucket: 'wander-love-images',
+	Key: '',
+	ContentType: ''
 }
 
-const AWS = require('aws-sdk')
+const getUrl = (req, res) => {
+	let userId = req.session.user.userId
+	let doggoName = req.body.doggoName
+	let doggoImage = req.body.doggoImage.name
+	let description = req.body.description
+	console.log('req.body ', req.body)
+	const key = `${userId}/${uuid()}.png`
 
-AWS.config.update({ region: 'ap-northeast-1' })
-s3 = new AWS.S3({ apiVersion: '2006-03-01' })
+	s3.getSignedUrl(
+		'putObject',
+		{
+			Bucket: 'wander-love-images',
+			Key: key,
+			ContentType: 'png'
+		},
+		(err, url) => {
+			console.log({ key, url })
+			res.send({ key, url })
+		}
+	)
+}
 
 // Function exporting just to check
 const listBucketAndObjects = () => {
@@ -32,7 +57,8 @@ const listBucketAndObjects = () => {
 }
 
 module.exports = {
-	listBucket: listBucketAndObjects
+	listBucket: listBucketAndObjects,
+	getUrl: getUrl
 }
 
 // const BUCKET_NAME = ''

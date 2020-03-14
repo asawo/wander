@@ -30,9 +30,13 @@ router.get('/add-doggos', (req, res) => {
 
 router.post('/add-doggos', (req, res) => {
 	// get the upload url from aws s3
-	s3.listBucket(req, res)
+	// s3.listBucket(req, res)
+	console.log('req.body.doggoImage', req.body.doggoImage)
+	s3.getUrl(req, res)
 	// make sure db.addDoggo runs after s3 returns upload url
-	db.addDoggo(req, res)
+
+	//######## Disabled for now
+	// db.addDoggo(req, res)
 })
 
 module.exports = router

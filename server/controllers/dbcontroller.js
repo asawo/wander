@@ -79,7 +79,7 @@ const addDoggo = (req, res) => {
 	let doggoName = req.body.doggoName
 	let doggoImage = req.body.doggoImage
 	let description = req.body.description
-	console.log({ userID: userId, doggoName: doggoName, doggoImage: doggoImage })
+	console.log(doggoImage)
 
 	db.none(
 		'INSERT INTO doggos(doggoname, description, userid) VALUES($1,$2,$3)',
