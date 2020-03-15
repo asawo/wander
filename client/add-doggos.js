@@ -32,7 +32,7 @@ newDog.addEventListener('submit', e => {
 		description: e.target.elements[2].value
 	}
 
-	postData('../users/add-doggos', doggoProfile)
+	postData('../users/add-doggos/upload', doggoProfile)
 		.then(data => {
 			if (data.status === 200) {
 				$('.doggo-created').show() // success label for creating doggo
@@ -43,8 +43,8 @@ newDog.addEventListener('submit', e => {
 			}
 		})
 		.then(res => {
-			console.log('res ', res)
-			console.log('doggoProfile ', doggoProfile)
+			// console.log('res ', res)
+			// console.log('doggoProfile ', doggoProfile)
 			// Upload doggo image here
 			fetch(res.url, {
 				method: 'PUT',
@@ -52,13 +52,17 @@ newDog.addEventListener('submit', e => {
 					'Content-Type': doggoProfile.doggoImageType
 				},
 				body: doggoProfile.doggoImage
+			}).then(result => {
+				const data = {
+					doggoName: doggoProfile.doggoName,
+					description: doggoProfile.description,
+					doggoImage: `https://wander-love-images.s3-ap-northeast-1.amazonaws.com/${res.key}`
+				}
+				console.log('posting this data to DB:', data)
+				postData('../users/add-doggos/db', data)
+					.then(res => console.log(res))
+					.catch(error => console.error('Error:', error))
 			})
-				.then(result => {
-					console.log('Success:', result)
-				})
-				.catch(error => {
-					console.error('Error:', error)
-				})
 		})
 })
 

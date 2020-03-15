@@ -77,13 +77,13 @@ const signInUser = (req, res) => {
 const addDoggo = (req, res) => {
 	let userId = req.session.user.userId
 	let doggoName = req.body.doggoName
-	let doggoImage = req.body.doggoImage
+	let imageUrl = req.body.doggoImage
 	let description = req.body.description
-	console.log(doggoImage)
+	console.log('in dbcontroller/addDog req.body: ', req.body)
 
 	db.none(
-		'INSERT INTO doggos(doggoname, description, userid) VALUES($1,$2,$3)',
-		[doggoName, description, userId]
+		'INSERT INTO doggos(doggoname, description, imageurl, userid) VALUES($1,$2,$3,$4)',
+		[doggoName, description, imageUrl, userId]
 	)
 		.then(() => {
 			res.status(200).send({ message: 'SUCCESS' })
