@@ -95,9 +95,10 @@ const addDoggo = (req, res) => {
 const loadMyDoggos = (req, res) => {
 	let userId = req.session.user.userId
 
-	db.any('SELECT doggoname, description FROM doggos WHERE userid = $1', [
-		userId
-	])
+	db.any(
+		'SELECT doggoname, description, imageurl FROM doggos WHERE userid = $1',
+		[userId]
+	)
 		.then(doggos => {
 			res.status(200).send({ doggos: doggos })
 		})
