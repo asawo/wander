@@ -22,7 +22,10 @@ const addDoggos = (doggoName, description) => {
 			<div class="card-body">
 				<h5 class="card-title">${doggoName}</h5>
 				<p class="card-text">${description}</p>
-				<a href="#" class="btn btn-primary">Pat</a>
+				<span>
+					<a href="#" class="btn btn-primary">Pat</a>
+					<a href="#" class="btn btn-secondary">Like</a>
+				</span>
 			</div>
 		</div>
 	</div> \n`
