@@ -79,7 +79,6 @@ const addDoggo = (req, res) => {
 	let doggoName = req.body.doggoName
 	let imageUrl = req.body.doggoImage
 	let description = req.body.description
-	console.log('in dbcontroller/addDog req.body: ', req.body)
 
 	db.none(
 		'INSERT INTO doggos(doggoname, description, imageurl, userid) VALUES($1,$2,$3,$4)',
@@ -105,9 +104,18 @@ const loadMyDoggos = (req, res) => {
 		.catch(e => console.error(e))
 }
 
+const loadAll = (req, res) => {
+	db.any('SELECT doggoname, description, imageurl FROM doggos')
+		.then(allDoggos => {
+			res.status(200).send({ doggos: allDoggos })
+		})
+		.catch(e => console.error(e))
+}
+
 module.exports = {
 	registerUser: registerUser,
 	signInUser: signInUser,
 	addDoggo: addDoggo,
-	loadMyDoggos: loadMyDoggos
+	loadMyDoggos: loadMyDoggos,
+	loadAll: loadAll
 }

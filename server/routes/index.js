@@ -8,6 +8,8 @@ router.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '../../client/signup.html'))
 })
 
+router.get('/all-doggos', db.loadAll)
+
 router.post('/signin', db.signInUser)
 
 router.post('/signup', db.registerUser)
