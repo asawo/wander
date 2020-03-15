@@ -27,30 +27,6 @@ const getUrl = (req, res) => {
 	)
 }
 
-// Function exporting just to check
-const listBucketAndObjects = () => {
-	s3.listBuckets((err, data) => {
-		if (err) {
-			console.log('Error, ', err)
-		} else {
-			console.log('Success, bucket here: ', data.Buckets)
-		}
-	})
-
-	const bucketParams = {
-		Bucket: 'wander-love-images'
-	}
-
-	s3.listObjects(bucketParams, (err, data) => {
-		if (err) {
-			console.log('Error, ', err)
-		} else {
-			console.log('Success, objects here: ', data.Contents)
-		}
-	})
-}
-
 module.exports = {
-	listBucket: listBucketAndObjects,
 	getUrl: getUrl
 }
