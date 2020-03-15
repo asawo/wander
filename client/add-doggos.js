@@ -22,26 +22,44 @@ $('input[type="file"]').change(function(e) {
 
 // Add new dog
 const newDog = document.querySelector('#newDog')
-
 newDog.addEventListener('submit', e => {
 	e.preventDefault()
 
-	const doggoProfile = {
+	let doggoProfile = {
 		doggoName: e.target.elements[0].value,
-		doggoImage: e.target.elements[1].files[0],
+		doggoImage: e.target.elements[1].files[0], //Undefined on server
+		doggoImageType: e.target.elements[1].files[0].type,
 		description: e.target.elements[2].value
 	}
 
-	console.log(e.target.elements[1].files[0])
-
-	postData('../users/add-doggos', doggoProfile).then(data => {
-		if (data.status === 200) {
-			console.log(data)
-			$('.doggo-created').show() // success label for creating doggo
-		} else {
-			// $('.doggo-exists').show() // doggo exists!
-		}
-	})
+	postData('../users/add-doggos', doggoProfile)
+		.then(data => {
+			if (data.status === 200) {
+				$('.doggo-created').show() // success label for creating doggo
+				return data.response
+			} else {
+				// $('.doggo-exists').show() // doggo exists!
+				return data.response
+			}
+		})
+		.then(res => {
+			console.log('res ', res)
+			console.log('doggoProfile ', doggoProfile)
+			// Upload doggo image here
+			fetch(res.url, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': doggoProfile.doggoImageType
+				},
+				body: doggoProfile.doggoImage
+			})
+				.then(result => {
+					console.log('Success:', result)
+				})
+				.catch(error => {
+					console.error('Error:', error)
+				})
+		})
 })
 
 // Log out

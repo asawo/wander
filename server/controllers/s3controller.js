@@ -5,18 +5,10 @@ AWS.config.update({ region: 'ap-northeast-1' })
 
 const s3 = new AWS.S3({ apiVersion: '2006-03-01' })
 
-const bucketParams = {
-	Bucket: 'wander-love-images',
-	Key: '',
-	ContentType: ''
-}
-
+// Get secure signed URL from AWS to send PUT request to
 const getUrl = (req, res) => {
-	let userId = req.session.user.userId
-	let doggoName = req.body.doggoName
-	let doggoImage = req.body.doggoImage.name
-	let description = req.body.description
-	console.log('req.body ', req.body)
+	const userId = req.session.user.userId
+	const doggoImageType = req.body.doggoImageType
 	const key = `${userId}/${uuid()}.png`
 
 	s3.getSignedUrl(
@@ -24,10 +16,12 @@ const getUrl = (req, res) => {
 		{
 			Bucket: 'wander-love-images',
 			Key: key,
-			ContentType: 'png'
+			ContentType: doggoImageType
 		},
 		(err, url) => {
-			console.log({ key, url })
+			if (err) {
+				console.log('Error: ', err)
+			}
 			res.send({ key, url })
 		}
 	)
@@ -60,31 +54,3 @@ module.exports = {
 	listBucket: listBucketAndObjects,
 	getUrl: getUrl
 }
-
-// const BUCKET_NAME = ''
-// const IAM_USER_KEY = ''
-// const IAM_USER_SECRET = ''
-
-// function uploadToS3(file) {
-// 	let s3bucket = new AWS.S3({
-// 		accessKeyId: IAM_USER_KEY,
-// 		secretAccessKey: IAM_USER_SECRET,
-// 		Bucket: BUCKET_NAME
-// 	})
-
-// 	s3bucket.createBucket(function() {
-// 		var params = {
-// 			Bucket: BUCKET_NAME,
-// 			Key: file.name,
-// 			Body: file.data
-// 		}
-// 		s3bucket.upload(params, function(err, data) {
-// 			if (err) {
-// 				console.log('error in callback')
-// 				console.log(err)
-// 			}
-// 			console.log('success')
-// 			console.log(data)
-// 		})
-// 	})
-// }
