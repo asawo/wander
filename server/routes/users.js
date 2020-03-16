@@ -1,15 +1,17 @@
 const express = require('express')
 const router = express.Router()
 const path = require('path')
-const db = require('../db/dbcontroller.js')
+const db = require('../controllers/dbcontroller.js')
+const s3 = require('../controllers/s3controller.js')
 
-router.use('/', express.static(path.join(__dirname, '../../client')))
 router.use('/', (req, res, next) => {
 	if (!req.session.user) res.redirect('/')
-	next() // causing "can't set headers after they are sent" error
+	next()
 })
 
-// Serve home.html, or redirect to / if no session
+router.use('/', express.static(path.join(__dirname, '../../client')))
+
+// Serve home.html
 router.get('/home', (req, res) => {
 	res.sendFile(path.join(__dirname, '../../client/home.html'))
 })
@@ -26,6 +28,12 @@ router.get('/add-doggos', (req, res) => {
 	res.sendFile(path.join(__dirname, '../../client/add-doggos.html'))
 })
 
-router.post('/add-doggos', db.addDoggo)
+router.post('/add-doggos/upload', (req, res) => {
+	// get the upload url from aws s3
+	// console.log('/add-doggos/upload', req.body)
+	s3.getUrl(req, res)
+})
+
+router.post('/add-doggos/db', db.addDoggo)
 
 module.exports = router

@@ -14,38 +14,56 @@ async function postData(url = '', data = {}) {
 	return { status: status, response: res }
 }
 
+// Change file name
+$('input[type="file"]').change(function(e) {
+	var fileName = e.target.files[0].name
+	$('.custom-file-label').html(fileName)
+})
+
 // Add new dog
 const newDog = document.querySelector('#newDog')
-
 newDog.addEventListener('submit', e => {
 	e.preventDefault()
 
-	const doggoProfile = {
+	let doggoProfile = {
 		doggoName: e.target.elements[0].value,
-		// doggoImage: e.target.elements[1].files[0],
+		doggoImage: e.target.elements[1].files[0], //Undefined on server
+		doggoImageType: e.target.elements[1].files[0].type,
 		description: e.target.elements[2].value
 	}
 
-	postData('../users/add-doggos', doggoProfile).then(data => {
-		if (data.status === 200) {
-			console.log(data)
-			$('.doggo-created').show() // success label for creating doggo
-		} else {
-			// $('.doggo-exists').show() // doggo exists!
-		}
-	})
-
-	// const checkImage = file => {
-	// 	let imageType = /image.*/
-	// 	if (!file.type.match(imageType)) {
-	// 		throw 'Choose an image file!'
-	// 	} else if (!file) {
-	// 		throw 'Make sure to upload a pic!'
-	// 	} else {
-	// 		return true
-	// 	}
-	// }
-	// console.log(checkImage(doggoProfile.doggoImage))
+	postData('../users/add-doggos/upload', doggoProfile)
+		.then(data => {
+			if (data.status === 200) {
+				$('.doggo-created').show() // success label for creating doggo
+				return data.response
+			} else {
+				// $('.doggo-exists').show() // doggo exists!
+				return data.response
+			}
+		})
+		.then(res => {
+			// console.log('res ', res)
+			// console.log('doggoProfile ', doggoProfile)
+			// Upload doggo image here
+			fetch(res.url, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': doggoProfile.doggoImageType
+				},
+				body: doggoProfile.doggoImage
+			}).then(result => {
+				const data = {
+					doggoName: doggoProfile.doggoName,
+					description: doggoProfile.description,
+					doggoImage: `https://wander-love-images.s3-ap-northeast-1.amazonaws.com/${res.key}`
+				}
+				console.log('posting this data to DB:', data)
+				postData('../users/add-doggos/db', data)
+					.then(res => console.log(res))
+					.catch(error => console.error('Error:', error))
+			})
+		})
 })
 
 // Log out
