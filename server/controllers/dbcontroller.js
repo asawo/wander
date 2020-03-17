@@ -29,37 +29,45 @@ const createSession = (user, res, req, username, password) => {
 	}
 }
 
-const createAccount = (user, req, res, username, password) => {
-	if (user) {
-		res.status(400).send({ message: `User ${username} already exists` })
+//################################################
+// DB queries and handling
+//################################################
+
+const userExists = username => {
+	db.oneOrNone('SELECT userid FROM users WHERE username = $1', [username])
+		.then(user => {
+			console.log('userExists returns: ', user)
+			if (user === null) {
+				console.log('if (user === null), userExists returns: ', user)
+				return null
+			} else {
+				console.log('if (user !== null) userExists returns: ', user)
+				return user
+			}
+		})
+		.catch(e => console.error(e))
+}
+
+const createAccount = formData => {
+	if (formData) {
+		// return {Error: `User ${formData.username} already exists`}
+		console.log(formData)
 	} else {
-		bcrypt.hash(password, SALT_ROUNDS, function(error, hash) {
+		bcrypt.hash(formData.password, SALT_ROUNDS, function(error, hash) {
 			if (error == null) {
 				db.none('INSERT INTO users(username, password) VALUES($1,$2)', [
-					username,
+					formData.username,
 					hash
 				])
 					.then(() => {
-						res.status(200).send({ registration: 'SUCCESS' })
-						console.log(`User created: ${username}`)
+						// return {Success: `User created: ${formData.username}`}
+						console.log(`User created: ${formData.username}`)
+						return formData.username
 					})
 					.catch(e => console.log(e))
 			}
 		})
 	}
-}
-
-//################################################
-// DB queries and handling
-//################################################
-
-const registerUser = (req, res) => {
-	let username = req.body.username
-	let password = req.body.password
-
-	db.oneOrNone('SELECT userid FROM users WHERE username = $1', [username])
-		.then(user => createAccount(user, req, res, username, password))
-		.catch(e => console.error(e))
 }
 
 const signInUser = (req, res) => {
@@ -113,7 +121,8 @@ const loadAll = (req, res) => {
 }
 
 module.exports = {
-	registerUser: registerUser,
+	createAccount: createAccount,
+	userExists: userExists,
 	signInUser: signInUser,
 	addDoggo: addDoggo,
 	loadMyDoggos: loadMyDoggos,
