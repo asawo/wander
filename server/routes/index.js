@@ -19,24 +19,22 @@ router.post('/signup', (req, res) => {
 	}
 
 	db.userExists(formData.username)
-		.then(result => {
-			if (result === null) {
+		.then(user => {
+			if (user) {
+				res.status(400).json({ Error: `${formData.username} already exists` })
+			} else {
 				db.createAccount(formData)
-					.then(result => {
-						if (result === null) {
-							res.status(200).json({ Success: `${formData.username} created` })
-						} else {
-							res.status(400).json({ Error: 'Something went wrong' })
-						}
+					.then(() => {
+						res.status(200).json({ Success: `${formData.username} created` })
 					})
 					.catch(error => {
+						res.status(400).json({ error: error.message })
 						console.log('error', error.message)
 					})
-			} else {
-				res.status(400).json({ Error: `${formData.username} already exists` })
 			}
 		})
 		.catch(error => {
+			res.status(400).json({ error: error.message })
 			console.log('error', error.message)
 		})
 })
