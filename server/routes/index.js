@@ -18,20 +18,27 @@ router.post('/signup', (req, res) => {
 		password: req.body.password
 	}
 
-	console.log('db.userExists() returns: ', db.userExists(formData.username))
-
-	// if (db.userExists(formData) === null) {
-	// 	db.createAccount(formData).then(response => {
-	// 		console.log('dbCreateAccount response ', response)
-	// 		if (response === 'Success') {
-	// 			res.status(200).json({ message: 'Account created!' })
-	// 		} else {
-	// 			res.status(400).json({ errorCode: 'UserExists' })
-	// 		}
-	// 	})
-	// } else {
-	// 	console.log('form data !== null', db.userExists(formData))
-	// }
+	db.userExists(formData.username)
+		.then(result => {
+			if (result === null) {
+				db.createAccount(formData)
+					.then(result => {
+						if (result === null) {
+							res.status(200).json({ Success: `${formData.username} created` })
+						} else {
+							res.status(400).json({ Error: 'Something went wrong' })
+						}
+					})
+					.catch(error => {
+						console.log('error', error.message)
+					})
+			} else {
+				res.status(400).json({ Error: `${formData.username} already exists` })
+			}
+		})
+		.catch(error => {
+			console.log('error', error.message)
+		})
 })
 
 router.get('/logout', (req, res, next) => {

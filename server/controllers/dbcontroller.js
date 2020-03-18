@@ -33,41 +33,25 @@ const createSession = (user, res, req, username, password) => {
 // DB queries and handling
 //################################################
 
-const userExists = username => {
-	db.oneOrNone('SELECT userid FROM users WHERE username = $1', [username])
-		.then(user => {
-			console.log('userExists returns: ', user)
-			if (user === null) {
-				console.log('if (user === null), userExists returns: ', user)
-				return null
-			} else {
-				console.log('if (user !== null) userExists returns: ', user)
-				return user
-			}
-		})
-		.catch(e => console.error(e))
+const userExists = async username => {
+	const result = await db.oneOrNone(
+		'SELECT userid FROM users WHERE username = $1',
+		[username]
+	)
+	return result
 }
 
-const createAccount = formData => {
-	if (formData) {
-		// return {Error: `User ${formData.username} already exists`}
-		console.log(formData)
-	} else {
-		bcrypt.hash(formData.password, SALT_ROUNDS, function(error, hash) {
-			if (error == null) {
-				db.none('INSERT INTO users(username, password) VALUES($1,$2)', [
-					formData.username,
-					hash
-				])
-					.then(() => {
-						// return {Success: `User created: ${formData.username}`}
-						console.log(`User created: ${formData.username}`)
-						return formData.username
-					})
-					.catch(e => console.log(e))
-			}
-		})
+const createAccount = async formData => {
+	const hash = await bcrypt.hash(formData.password, SALT_ROUNDS)
+
+	if (hash !== null) {
+		const result = await db.none(
+			'INSERT INTO users(username, password) VALUES($1,$2)',
+			[formData.username, hash]
+		)
+		return result // should be null if everything was successful
 	}
+	return formData.username
 }
 
 const signInUser = (req, res) => {
