@@ -1,4 +1,5 @@
 const db = require('../controllers/dbcontroller.js')
+const s3 = require('../controllers/s3controller.js')
 
 const registerUser = (req, res) => {
 	const formData = {
@@ -88,10 +89,25 @@ const loadAllDoggos = (req, res) => {
 		})
 }
 
+const getSignedUrl = (req, res) => {
+	const doggoImageType = req.body.doggoImageType
+	const userId = req.session.user.userId
+
+	s3.getUploadUrl(userId, doggoImageType)
+		.then(url => {
+			res.send(url)
+		})
+		.catch(error => {
+			res.status(500).send({ error: error.message })
+			console.log(error)
+		})
+}
+
 module.exports = {
 	registerUser,
 	createSession,
 	signIn,
 	logOut,
-	loadAllDoggos
+	loadAllDoggos,
+	getSignedUrl
 }

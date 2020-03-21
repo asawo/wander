@@ -27,7 +27,7 @@ newDog.addEventListener('submit', e => {
 
 	let doggoProfile = {
 		doggoName: e.target.elements[0].value,
-		doggoImage: e.target.elements[1].files[0], //Undefined on server
+		doggoImage: e.target.elements[1].files[0],
 		doggoImageType: e.target.elements[1].files[0].type,
 		description: e.target.elements[2].value
 	}

@@ -3,6 +3,7 @@ const router = express.Router()
 const path = require('path')
 const db = require('../controllers/dbcontroller.js')
 const s3 = require('../controllers/s3controller.js')
+const func = require('./functions.js')
 
 router.use('/', (req, res, next) => {
 	if (!req.session.user) res.redirect('/')
@@ -28,11 +29,7 @@ router.get('/add-doggos', (req, res) => {
 	res.sendFile(path.join(__dirname, '../../client/add-doggos.html'))
 })
 
-router.post('/add-doggos/upload', (req, res) => {
-	// get the upload url from aws s3
-	// console.log('/add-doggos/upload', req.body)
-	s3.getUrl(req, res)
-})
+router.post('/add-doggos/upload', func.getSignedUrl)
 
 router.post('/add-doggos/db', db.addDoggo)
 
