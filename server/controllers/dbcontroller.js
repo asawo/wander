@@ -66,17 +66,13 @@ const addDoggo = async dogData => {
 // Refactored above
 // Refactoring below
 
-const loadMyDoggos = (req, res) => {
-	let userId = req.session.user.userId
-
-	db.any(
+const loadMyDoggos = async userId => {
+	const result = await db.any(
 		'SELECT doggoname, description, imageurl FROM doggos WHERE userid = $1',
 		[userId]
 	)
-		.then(doggos => {
-			res.status(200).send({ doggos: doggos })
-		})
-		.catch(e => console.error(e))
+
+	return result
 }
 
 module.exports = {

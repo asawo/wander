@@ -24,7 +24,7 @@ router.get('/my-doggos', (req, res) => {
 	res.sendFile(path.join(__dirname, '../../client/my-doggos.html'))
 })
 
-router.get('/load-my-doggos', db.loadMyDoggos)
+router.get('/load-my-doggos', func.loadMyDoggos)
 
 // add doggos page
 router.get('/add-doggos', (req, res) => {

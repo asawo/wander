@@ -122,6 +122,18 @@ const addDogToDb = (req, res) => {
 		})
 }
 
+const loadMyDoggos = (req, res) => {
+	let userId = req.session.user.userId
+	db.loadMyDoggos(userId)
+		.then(doggos => {
+			res.status(200).send({ doggos: doggos })
+		})
+		.catch(error => {
+			res.status(500).send({ error: error.message })
+			console.log(error)
+		})
+}
+
 module.exports = {
 	registerUser,
 	createSession,
@@ -129,5 +141,6 @@ module.exports = {
 	logOut,
 	loadAllDoggos,
 	getSignedUrl,
-	addDogToDb
+	addDogToDb,
+	loadMyDoggos
 }
