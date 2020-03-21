@@ -46,6 +46,16 @@ const authenticateUser = async (user, password) => {
 	return false
 }
 
+// Refactored above
+
+const loadAll = async () => {
+	const result = await db.any(
+		'SELECT doggoname, description, imageurl FROM doggos'
+	)
+
+	return result
+}
+
 const addDoggo = (req, res) => {
 	let userId = req.session.user.userId
 	let doggoName = req.body.doggoName
@@ -76,20 +86,11 @@ const loadMyDoggos = (req, res) => {
 		.catch(e => console.error(e))
 }
 
-const loadAll = (req, res) => {
-	db.any('SELECT doggoname, description, imageurl FROM doggos')
-		.then(allDoggos => {
-			res.status(200).send({ doggos: allDoggos })
-		})
-		.catch(e => console.error(e))
-}
-
 module.exports = {
 	createAccount,
 	userExists,
 	getCredentials,
 	authenticateUser,
-	// createSession,
 	addDoggo,
 	loadMyDoggos,
 	loadAll

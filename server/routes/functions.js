@@ -77,9 +77,21 @@ const logOut = (req, res) => {
 	}
 }
 
+const loadAllDoggos = (req, res) => {
+	db.loadAll()
+		.then(allDoggos => {
+			res.status(200).send({ doggos: allDoggos })
+		})
+		.catch(error => {
+			res.status(500).send({ error: error.message })
+			console.log(error)
+		})
+}
+
 module.exports = {
 	registerUser,
 	createSession,
 	signIn,
-	logOut
+	logOut,
+	loadAllDoggos
 }
