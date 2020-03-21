@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const path = require('path')
-const db = require('../controllers/dbcontroller.js')
-const s3 = require('../controllers/s3controller.js')
 const func = require('./functions.js')
 
 router.use('/', (req, res, next) => {

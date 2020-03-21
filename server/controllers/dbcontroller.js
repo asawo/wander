@@ -63,9 +63,6 @@ const addDoggo = async dogData => {
 	return result
 }
 
-// Refactored above
-// Refactoring below
-
 const loadMyDoggos = async userId => {
 	const result = await db.any(
 		'SELECT doggoname, description, imageurl FROM doggos WHERE userid = $1',
