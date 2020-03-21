@@ -32,6 +32,14 @@ signUpForm.addEventListener('submit', e => {
 		postData('../signup', signUpFormData).then(data => {
 			if (data.status === 200) {
 				$('.sign-up-success').show()
+				postData('../signin', signUpFormData).then(data => {
+					console.log(data)
+					if (data.status === 301) {
+						setTimeout(() => {
+							window.location.replace('/users/home')
+						}, 1000)
+					}
+				})
 			} else {
 				$('.sign-up-alert').show()
 			}
