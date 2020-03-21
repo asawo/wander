@@ -33,6 +33,6 @@ router.get('/add-doggos', (req, res) => {
 
 router.post('/add-doggos/upload', func.getSignedUrl)
 
-router.post('/add-doggos/db', db.addDoggo)
+router.post('/add-doggos/db', func.addDogToDb)
 
 module.exports = router

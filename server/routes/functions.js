@@ -103,11 +103,31 @@ const getSignedUrl = (req, res) => {
 		})
 }
 
+const addDogToDb = (req, res) => {
+	const dogData = {
+		userId: req.session.user.userId,
+		doggoName: req.body.doggoName,
+		imageUrl: req.body.doggoImage,
+		description: req.body.description
+	}
+
+	db.addDoggo(dogData)
+		.then(result => {
+			res.status(200).send({ message: 'SUCCESS' })
+			console.log(`Added ${dogData.doggoName}!`)
+		})
+		.catch(error => {
+			res.status(500).send({ error: error.message })
+			console.log(error)
+		})
+}
+
 module.exports = {
 	registerUser,
 	createSession,
 	signIn,
 	logOut,
 	loadAllDoggos,
-	getSignedUrl
+	getSignedUrl,
+	addDogToDb
 }

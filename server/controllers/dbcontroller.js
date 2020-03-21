@@ -46,8 +46,6 @@ const authenticateUser = async (user, password) => {
 	return false
 }
 
-// Refactored above
-
 const loadAll = async () => {
 	const result = await db.any(
 		'SELECT doggoname, description, imageurl FROM doggos'
@@ -56,22 +54,17 @@ const loadAll = async () => {
 	return result
 }
 
-const addDoggo = (req, res) => {
-	let userId = req.session.user.userId
-	let doggoName = req.body.doggoName
-	let imageUrl = req.body.doggoImage
-	let description = req.body.description
-
-	db.none(
+const addDoggo = async dogData => {
+	const result = await db.none(
 		'INSERT INTO doggos(doggoname, description, imageurl, userid) VALUES($1,$2,$3,$4)',
-		[doggoName, description, imageUrl, userId]
+		[dogData.doggoName, dogData.description, dogData.imageUrl, dogData.userId]
 	)
-		.then(() => {
-			res.status(200).send({ message: 'SUCCESS' })
-			console.log(`Added ${doggoName}!`)
-		})
-		.catch(e => console.error(e))
+
+	return result
 }
+
+// Refactored above
+// Refactoring below
 
 const loadMyDoggos = (req, res) => {
 	let userId = req.session.user.userId
