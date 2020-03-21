@@ -6,8 +6,10 @@ const s3 = require('../controllers/s3controller.js')
 const func = require('./functions.js')
 
 router.use('/', (req, res, next) => {
-	if (!req.session.user) res.redirect('/')
-	next()
+	if (req.session.user) {
+		return next()
+	}
+	res.redirect('/')
 })
 
 router.use('/', express.static(path.join(__dirname, '../../client')))
