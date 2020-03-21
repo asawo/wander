@@ -1,12 +1,12 @@
-const chai = require('chai')
+const chai = require('chai'),
+	should = chai.should(),
+	expect = chai.expect
 const chaiHttp = require('chai-http')
 const server = require('../index.js')
 const pgp = require('pg-promise')()
 const CONNECTION_STRING =
 	process.env.DATABASE_URL || 'postgres://localhost:5432/wander'
 const db = pgp(CONNECTION_STRING)
-
-const should = chai.should()
 
 chai.use(chaiHttp)
 
@@ -42,7 +42,23 @@ describe('Check login', function() {
 				password: 'test1'
 			})
 			.end(function(err, res) {
+				expect(err).to.be.a('null')
 				res.should.have.status(400)
+				done()
+			})
+	})
+
+	it('Should be able to login with test account', done => {
+		chai
+			.request(server)
+			.post('/signin')
+			.send({
+				username: 'test',
+				password: 'test'
+			})
+			.end(function(err, res) {
+				// expect(err).to.be.a('null')
+				res.should.have.status(301)
 				done()
 			})
 	})

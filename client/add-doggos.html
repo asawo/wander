@@ -13,7 +13,7 @@
 		<title>Wander</title>
 	</head>
 	<body style="background-color: #ffead4;">
-		<nav class="navbar navbar-expand-sm navbar-light bg-light">
+		<nav class="navbar sticky-top navbar-expand-sm navbar-light bg-light">
 			<a class="navbar-brand" href="/users/home">Wander</a>
 			<button
 				class="navbar-toggler"
@@ -28,32 +28,14 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav">
-					<li class="nav-item active">
-						<a class="nav-link" href="/users/home"
-							>Timeline </a
-						>
-					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="/users/my-doggos">My doggos</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="/users/add-doggos">Add doggos<span class="sr-only">(current)</span></a>
 					</li>
-					<li class="nav-item dropdown">
-						<a
-							class="nav-link dropdown-toggle"
-							href="#"
-							id="navbarDropdownMenuLink"
-							data-toggle="dropdown"
-							aria-haspopup="true"
-							aria-expanded="false"
-						>
-							Account
-						</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<a class="dropdown-item" id="logOut" href="#">Log out</a>
-							<a class="dropdown-item" href="#">Delete account</a>
-						</div>
+					<li class="nav-item">
+						<a class="nav-link" id="logOut" href="#">Log out</a>
 					</li>
 				</ul>
 			</div>
@@ -75,13 +57,10 @@
           </div>
           <div class="col-sm">
             <div class="input-group mt-3">
-							<div class="input-group-prepend">
-								<span class="input-group-text" id="uploadFile">Upload</span>
-							</div>
 							<div class="custom-file">
 								<input type="file" accept="image/*" class="custom-file-input" id="inputGroupFile01"
 									aria-describedby="uploadFile">
-								<label class="custom-file-label text-left" for="inputGroupFile01">Choose file</label>
+								<label class="custom-file-label text-left" for="inputGroupFile01">Choose doggo image</label>
 							</div>
 						</div>
           </div>

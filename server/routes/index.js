@@ -1,29 +1,19 @@
 const express = require('express')
 const router = express.Router()
 const path = require('path')
-const db = require('../controllers/dbcontroller.js')
+const func = require('./functions')
 
 // Serve sign in page
 router.get('/', (req, res) => {
 	res.sendFile(path.join(__dirname, '../../client/signup.html'))
 })
 
-router.get('/all-doggos', db.loadAll)
+router.get('/all-doggos', func.loadAllDoggos)
 
-router.post('/signin', db.signInUser)
+router.post('/signin', func.signIn)
 
-router.post('/signup', db.registerUser)
+router.post('/signup', func.registerUser)
 
-router.get('/logout', (req, res, next) => {
-	if (req.session) {
-		req.session.destroy(error => {
-			if (error) {
-				next(error)
-			} else {
-				res.redirect('/')
-			}
-		})
-	}
-})
+router.get('/logout', func.logOut)
 
 module.exports = router

@@ -5,28 +5,34 @@ AWS.config.update({ region: 'ap-northeast-1' })
 
 const s3 = new AWS.S3({ apiVersion: '2006-03-01' })
 
-// Get secure signed URL from AWS to send PUT request to
-const getUrl = (req, res) => {
-	const userId = req.session.user.userId
-	const doggoImageType = req.body.doggoImageType
+const getUploadUrl = async (userId, doggoImageType) => {
 	const key = `${userId}/${uuid()}.png`
 
-	s3.getSignedUrl(
-		'putObject',
-		{
-			Bucket: 'wander-love-images',
-			Key: key,
-			ContentType: doggoImageType
-		},
-		(err, url) => {
-			if (err) {
-				console.log('Error: ', err)
-			}
-			res.send({ key, url })
-		}
-	)
+	try {
+		const url = await new Promise((resolve, reject) => {
+			s3.getSignedUrl(
+				'putObject',
+				{
+					Bucket: 'wander-love-images',
+					Key: key,
+					ContentType: doggoImageType
+				},
+				(err, url) => {
+					if (err) {
+						reject(err)
+					}
+					resolve(url)
+				}
+			)
+		})
+
+		return { key, url }
+	} catch (err) {
+		console.error('s3 putObject, get signedUrl failed')
+		throw err
+	}
 }
 
 module.exports = {
-	getUrl: getUrl
+	getUploadUrl
 }
