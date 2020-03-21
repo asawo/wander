@@ -48,7 +48,7 @@ const authenticateUser = async (user, password) => {
 
 const loadAll = async () => {
 	const result = await db.any(
-		'SELECT doggoname, description, imageurl FROM doggos'
+		'SELECT doggoname, description, imageurl FROM doggos ORDER BY dateupdated DESC'
 	)
 
 	return result
@@ -65,7 +65,7 @@ const addDoggo = async dogData => {
 
 const loadMyDoggos = async userId => {
 	const result = await db.any(
-		'SELECT doggoname, description, imageurl FROM doggos WHERE userid = $1',
+		'SELECT doggoname, description, imageurl FROM doggos WHERE userid = $1 ORDER BY dateupdated DESC',
 		[userId]
 	)
 
