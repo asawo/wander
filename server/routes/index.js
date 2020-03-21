@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const path = require('path')
 const db = require('../controllers/dbcontroller.js')
+const func = require('./functions')
 
 // Serve sign in page
 router.get('/', (req, res) => {
@@ -10,45 +11,10 @@ router.get('/', (req, res) => {
 
 router.get('/all-doggos', db.loadAll)
 
-router.post('/signin', db.signInUser)
+router.post('/signin', func.signIn)
 
-router.post('/signup', (req, res) => {
-	const formData = {
-		username: req.body.username,
-		password: req.body.password
-	}
+router.post('/signup', func.registerUser)
 
-	db.userExists(formData.username)
-		.then(user => {
-			if (user) {
-				res.status(400).json({ Error: `${formData.username} already exists` })
-			} else {
-				db.createAccount(formData)
-					.then(() => {
-						res.status(200).json({ Success: `${formData.username} created` })
-					})
-					.catch(error => {
-						res.status(400).json({ error: error.message })
-						console.log('error', error.message)
-					})
-			}
-		})
-		.catch(error => {
-			res.status(400).json({ error: error.message })
-			console.log('error', error.message)
-		})
-})
-
-router.get('/logout', (req, res, next) => {
-	if (req.session) {
-		req.session.destroy(error => {
-			if (error) {
-				next(error)
-			} else {
-				res.redirect('/')
-			}
-		})
-	}
-})
+router.get('/logout', func.logOut)
 
 module.exports = router

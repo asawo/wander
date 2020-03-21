@@ -5,30 +5,6 @@ const CONNECTION_STRING =
 	process.env.DATABASE_URL || 'postgres://localhost:5432/wander'
 const db = pgp(CONNECTION_STRING)
 
-const createSession = (user, res, req, username, password) => {
-	if (user) {
-		bcrypt.compare(password, user.password, function(error, result) {
-			if (result) {
-				console.log('SUCCESS, creating session and redirecting to /users/home')
-
-				if (req.session) {
-					req.session.user = {
-						userId: user.userid,
-						username: user.username
-					}
-				}
-				res.status(301).send({ authenticated: true, user: username })
-			} else {
-				res
-					.status(400)
-					.send({ message: 'Invalid username or password', error: error })
-			}
-		})
-	} else {
-		res.status(400).send({ message: 'Invalid username or password' })
-	}
-}
-
 //################################################
 // DB queries and handling
 //################################################
@@ -54,16 +30,20 @@ const createAccount = async formData => {
 	return formData.username
 }
 
-const signInUser = (req, res) => {
-	let username = req.body.username
-	let password = req.body.password
-
-	db.oneOrNone(
+const getCredentials = async username => {
+	const userCredentials = await db.oneOrNone(
 		'SELECT userid, username, password FROM users WHERE username = $1',
 		[username]
 	)
-		.then(user => createSession(user, res, req, username, password))
-		.catch(e => console.error(e))
+	return userCredentials
+}
+
+const authenticateUser = async (user, password) => {
+	if (user) {
+		const result = await bcrypt.compare(password, user.password)
+		return result
+	}
+	return false
 }
 
 const addDoggo = (req, res) => {
@@ -105,10 +85,12 @@ const loadAll = (req, res) => {
 }
 
 module.exports = {
-	createAccount: createAccount,
-	userExists: userExists,
-	signInUser: signInUser,
-	addDoggo: addDoggo,
-	loadMyDoggos: loadMyDoggos,
-	loadAll: loadAll
+	createAccount,
+	userExists,
+	getCredentials,
+	authenticateUser,
+	// createSession,
+	addDoggo,
+	loadMyDoggos,
+	loadAll
 }
