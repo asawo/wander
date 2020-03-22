@@ -3,16 +3,12 @@ const chai = require('chai'),
 	expect = chai.expect
 const chaiHttp = require('chai-http')
 const server = require('../index.js')
-const pgp = require('pg-promise')()
-const CONNECTION_STRING =
-	process.env.DATABASE_URL || 'postgres://localhost:5432/wander'
-const db = pgp(CONNECTION_STRING)
 const dbcontroller = require('../controllers/dbcontroller.js')
 const s3controller = require('../controllers/s3controller.js')
 
 chai.use(chaiHttp)
 
-describe('Page load test for /', function() {
+describe(`Page load test for "/" endpoint`, function() {
 	it('Should return 200 for / GET', done => {
 		chai
 			.request(server)
@@ -22,19 +18,20 @@ describe('Page load test for /', function() {
 				done()
 			})
 	}),
-		it('Should redirect to / from /users/home if no session exists', done => {
+		it(`Should redirect to "/" from "/users/home" if no session exists`, done => {
 			chai
 				.request(server)
 				.get('/users/home')
 				.redirects(0)
 				.end(function(err, res) {
+					res.should.have.status(302)
 					res.should.redirectTo('/')
 					done()
 				})
 		})
 })
 
-describe('Test for /signin endpoint', function() {
+describe(`Test for "/signin" endpoint`, function() {
 	it('Should return 400 error with invalid user', done => {
 		chai
 			.request(server)
@@ -62,17 +59,6 @@ describe('Test for /signin endpoint', function() {
 				res.should.have.status(301)
 				done()
 			})
-	})
-})
-
-describe('Check DB', function() {
-	it('Should connect to psql db', done => {
-		db.any('SELECT username FROM users')
-			.then(res => {
-				res[0].username.should.equal('polly')
-				done()
-			})
-			.catch(e => console.log(e))
 	})
 })
 
