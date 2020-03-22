@@ -15,20 +15,23 @@ describe(`Page load test for "/" endpoint`, function() {
 			.get('/')
 			.end(function(err, res) {
 				res.should.have.status(200)
+				should.not.exist(err)
 				done()
 			})
-	}),
-		it(`Should redirect to "/" from "/users/home" if no session exists`, done => {
-			chai
-				.request(server)
-				.get('/users/home')
-				.redirects(0)
-				.end(function(err, res) {
-					res.should.have.status(302)
-					res.should.redirectTo('/')
-					done()
-				})
-		})
+	})
+
+	it(`Should redirect to "/" from "/users/home" if no session exists`, done => {
+		chai
+			.request(server)
+			.get('/users/home')
+			.redirects(0)
+			.end(function(err, res) {
+				res.should.have.status(302)
+				res.should.redirectTo('/')
+				should.not.exist(err)
+				done()
+			})
+	})
 })
 
 describe(`Test for "/signin" endpoint`, function() {
@@ -56,6 +59,8 @@ describe(`Test for "/signin" endpoint`, function() {
 				password: 'test'
 			})
 			.end(function(err, res) {
+				// expect(err).to.be.a('null')
+				// location header lacks redirect
 				res.should.have.status(301)
 				done()
 			})
@@ -70,7 +75,9 @@ describe('DB controller functions', function() {
 				res.should.be.a('array')
 				done()
 			})
-			.catch(e => console.log(e))
+			.catch(err => {
+				expect(err).to.be.a('null')
+			})
 	})
 
 	it('userExists should return a user', done => {
@@ -80,7 +87,9 @@ describe('DB controller functions', function() {
 				res.should.be.a('object')
 				done()
 			})
-			.catch(e => console.log(e))
+			.catch(err => {
+				expect(err).to.be.a('null')
+			})
 	})
 
 	it('getCredentials should return username and password', done => {
@@ -90,23 +99,42 @@ describe('DB controller functions', function() {
 				res.should.be.a('object')
 				done()
 			})
-			.catch(e => console.log(e))
+			.catch(err => {
+				expect(err).to.be.a('null')
+			})
 	})
 
 	it('authenticateUser should authenticate user', done => {
 		dbcontroller
 			.getCredentials('test')
 			.then(user => {
-				dbcontroller
-					.authenticateUser(user, 'test')
-					.then(res => {
-						res.should.be.a('boolean')
-						res.should.equal(true)
-						done()
-					})
-					.catch(e => console.log(e))
+				return dbcontroller.authenticateUser(user, 'test')
 			})
-			.catch(e => console.log(e))
+			.then(res => {
+				res.result.should.be.a('boolean')
+				res.result.should.equal(true)
+				done()
+			})
+			.catch(err => {
+				expect(err).to.be.a('null')
+			})
+	})
+
+	it('authenticateUser should reject fake user', done => {
+		dbcontroller
+			.getCredentials('test')
+			.then(user => {
+				return dbcontroller.authenticateUser(user, 'wrongPassword')
+			})
+			.then(res => {
+				res.result.should.be.a('boolean')
+				res.result.should.equal(false)
+				done()
+			})
+			.catch(err => {
+				console.log(err)
+				expect(err).to.be.a('null')
+			})
 	})
 })
 
@@ -118,6 +146,8 @@ describe('S3 controller functions', function() {
 				res.should.be.a('object')
 				done()
 			})
-			.catch(e => console.log(e))
+			.catch(err => {
+				expect(err).to.be.a('null')
+			})
 	})
 })
