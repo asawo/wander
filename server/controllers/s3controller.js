@@ -6,7 +6,8 @@ AWS.config.update({ region: 'ap-northeast-1' })
 const s3 = new AWS.S3({ apiVersion: '2006-03-01' })
 
 const getUploadUrl = async (userId, doggoImageType) => {
-	const key = `${userId}/${uuid()}.png`
+	const fileExtension = doggoImageType.split('/')[1]
+	const key = `${userId}/${uuid()}.${fileExtension}`
 
 	try {
 		const url = await new Promise((resolve, reject) => {
