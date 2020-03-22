@@ -7,10 +7,12 @@ const pgp = require('pg-promise')()
 const CONNECTION_STRING =
 	process.env.DATABASE_URL || 'postgres://localhost:5432/wander'
 const db = pgp(CONNECTION_STRING)
+const dbcontroller = require('../controllers/dbcontroller.js')
+const s3controller = require('../controllers/s3controller.js')
 
 chai.use(chaiHttp)
 
-describe('Check page load', function() {
+describe('Page load test for /', function() {
 	it('Should return 200 for / GET', done => {
 		chai
 			.request(server)
@@ -20,7 +22,7 @@ describe('Check page load', function() {
 				done()
 			})
 	}),
-		it('Should redirect to / for /users/home GET', done => {
+		it('Should redirect to / from /users/home if no session exists', done => {
 			chai
 				.request(server)
 				.get('/users/home')
@@ -32,7 +34,7 @@ describe('Check page load', function() {
 		})
 })
 
-describe('Check login', function() {
+describe('Test for /signin endpoint', function() {
 	it('Should return 400 error with invalid user', done => {
 		chai
 			.request(server)
@@ -57,7 +59,6 @@ describe('Check login', function() {
 				password: 'test'
 			})
 			.end(function(err, res) {
-				// expect(err).to.be.a('null')
 				res.should.have.status(301)
 				done()
 			})
@@ -65,12 +66,6 @@ describe('Check login', function() {
 })
 
 describe('Check DB', function() {
-	// before(function(done){
-	//   ...
-	// });
-	// after(function(done){
-	//   ...
-	// });
 	it('Should connect to psql db', done => {
 		db.any('SELECT username FROM users')
 			.then(res => {
@@ -81,14 +76,62 @@ describe('Check DB', function() {
 	})
 })
 
-// describe('user registration', function() {
-// 	it('should return error if registering existing username', function(done) {
-// 		chai
-// 			.request(server)
-// 			.post('/signup')
-// 			.end(function(err, res) {
-// 				res.should.have.status(300)
-// 				done()
-// 			})
-// 	})
-// })
+describe('DB controller functions', function() {
+	it('loadAll should return an array of objects', done => {
+		dbcontroller
+			.loadAll()
+			.then(res => {
+				res.should.be.a('array')
+				done()
+			})
+			.catch(e => console.log(e))
+	})
+
+	it('userExists should return a user', done => {
+		dbcontroller
+			.userExists('test')
+			.then(res => {
+				res.should.be.a('object')
+				done()
+			})
+			.catch(e => console.log(e))
+	})
+
+	it('getCredentials should return username and password', done => {
+		dbcontroller
+			.getCredentials('test')
+			.then(res => {
+				res.should.be.a('object')
+				done()
+			})
+			.catch(e => console.log(e))
+	})
+
+	it('authenticateUser should authenticate user', done => {
+		dbcontroller
+			.getCredentials('test')
+			.then(user => {
+				dbcontroller
+					.authenticateUser(user, 'test')
+					.then(res => {
+						res.should.be.a('boolean')
+						res.should.equal(true)
+						done()
+					})
+					.catch(e => console.log(e))
+			})
+			.catch(e => console.log(e))
+	})
+})
+
+describe('S3 controller functions', function() {
+	it('getUploadUrl should return an object with upload key and url', done => {
+		s3controller
+			.getUploadUrl('20', 'image/jpeg')
+			.then(res => {
+				res.should.be.a('object')
+				done()
+			})
+			.catch(e => console.log(e))
+	})
+})
