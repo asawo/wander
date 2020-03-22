@@ -12,19 +12,14 @@ const registerUser = (req, res) => {
 			if (user) {
 				res.status(400).json({ Error: `${formData.username} already exists` })
 			} else {
-				db.createAccount(formData)
-					.then(() => {
-						res.status(200).json({ Success: `${formData.username} created` })
-					})
-					.catch(error => {
-						res.status(400).json({ error: error.message })
-						console.log('error', error.message)
-					})
+				return db.createAccount(formData)
 			}
 		})
+		.then(response => {
+			res.status(200).json({ Success: `${response.formData.username} created` })
+		})
 		.catch(error => {
-			res.status(500).json({ error: error.message }) // look into the right http status codes to return
-			console.log('error', error.message)
+			console.log('registerUser error: ', error.message)
 		})
 }
 
@@ -35,21 +30,20 @@ const signIn = (req, res) => {
 	}
 	db.getCredentials(formData.username)
 		.then(user => {
-			db.authenticateUser(user, formData.password)
-				.then(authenticated => {
-					if (authenticated === true) {
-						createSession(req.session, user)
-						res.status(301).send({ authenticated: true, user: user.username })
-					} else {
-						res.status(400).send({ message: 'Invalid username or password' })
-					}
-				})
-				.catch(error => {
-					res.status(401).send({ error: error.message })
-				})
+			return db.authenticateUser(user, formData.password)
+		})
+		.then(authenticated => {
+			if (authenticated.result === true) {
+				createSession(req.session, authenticated.user)
+				res
+					.status(301)
+					.send({ authenticated: true, user: authenticated.user.username })
+			} else {
+				res.status(400).send({ message: 'Invalid username or password' })
+			}
 		})
 		.catch(error => {
-			res.status(500).send({ error: error.message })
+			console.log('signIn error: ', error)
 		})
 }
 
