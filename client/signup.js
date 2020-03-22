@@ -85,6 +85,5 @@ signInForm.addEventListener('submit', e => {
 
 signInForm.addEventListener('keyup', e => {
 	// e.preventDefault()
-	console.log(e)
 	document.querySelector('.sign-in-alert').style.display = 'none'
 })
