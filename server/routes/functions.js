@@ -42,22 +42,18 @@ const signIn = (req, res) => {
 						res.status(301).send({ authenticated: true, user: user.username })
 					} else {
 						res.status(400).send({ message: 'Invalid username or password' })
-						console.log('Invalid username or password')
 					}
 				})
 				.catch(error => {
 					res.status(401).send({ error: error.message })
-					console.log(error)
 				})
 		})
 		.catch(error => {
 			res.status(500).send({ error: error.message })
-			console.log(error)
 		})
 }
 
 const createSession = (session, user) => {
-	console.log('SUCCESS, creating session and redirecting to /users/home')
 	if (session) {
 		session.user = {
 			userId: user.userid,

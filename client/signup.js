@@ -57,8 +57,6 @@ signUpForm.addEventListener('submit', e => {
 
 // Hides all alerts on keyup
 signUpForm.addEventListener('keyup', e => {
-	// e.preventDefault()
-	console.log(e)
 	document.querySelectorAll('.alert').forEach(alert => {
 		alert.style.display = 'none'
 	})
@@ -84,7 +82,5 @@ signInForm.addEventListener('submit', e => {
 })
 
 signInForm.addEventListener('keyup', e => {
-	// e.preventDefault()
-	console.log(e)
 	document.querySelector('.sign-in-alert').style.display = 'none'
 })
