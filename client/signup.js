@@ -18,8 +18,10 @@ async function postData(url = '', data = {}) {
 }
 
 // Log in
+
 signUpForm.addEventListener('submit', e => {
 	e.preventDefault()
+	document.querySelector('.alert').style.display = 'none'
 
 	const signUpFormData = {
 		username: e.target.elements[0].value,
@@ -31,7 +33,9 @@ signUpForm.addEventListener('submit', e => {
 	if (signUpFormData.password === secondPassword) {
 		postData('../signup', signUpFormData).then(data => {
 			if (data.status === 200) {
-				$('.sign-up-success').show()
+				// Show success banner
+				document.querySelector('.sign-up-success').style.display = 'block'
+
 				postData('../signin', signUpFormData).then(data => {
 					console.log(data)
 					if (data.status === 301) {
@@ -41,12 +45,23 @@ signUpForm.addEventListener('submit', e => {
 					}
 				})
 			} else {
-				$('.sign-up-alert').show()
+				// $('.sign-up-alert').show()
+				document.querySelector('.user-already-exists').style.display = 'block'
 			}
 		})
 	} else {
-		$('.wrong-password').show()
+		// $('.wrong-password').show()
+		document.querySelector('.wrong-password').style.display = 'block'
 	}
+})
+
+// Hides all alerts on keyup
+signUpForm.addEventListener('keyup', e => {
+	// e.preventDefault()
+	console.log(e)
+	document.querySelectorAll('.alert').forEach(alert => {
+		alert.style.display = 'none'
+	})
 })
 
 // Registration
@@ -66,4 +81,10 @@ signInForm.addEventListener('submit', e => {
 			$('.sign-in-alert').show()
 		}
 	})
+})
+
+signInForm.addEventListener('keyup', e => {
+	// e.preventDefault()
+	console.log(e)
+	document.querySelector('.sign-in-alert').style.display = 'none'
 })
