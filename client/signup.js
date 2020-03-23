@@ -18,7 +18,6 @@ async function postData(url = '', data = {}) {
 }
 
 // Log in
-
 signUpForm.addEventListener('submit', e => {
 	e.preventDefault()
 	document.querySelector('.alert').style.display = 'none'
