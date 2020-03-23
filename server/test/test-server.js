@@ -40,8 +40,8 @@ describe(`Test for "/signin" endpoint`, function() {
 			.request(server)
 			.post('/signin')
 			.send({
-				username: 'test1',
-				password: 'test1'
+				username: 'test2',
+				password: 'test2'
 			})
 			.end(function(err, res) {
 				expect(err).to.be.a('null')
@@ -67,8 +67,8 @@ describe(`Test for "/signin" endpoint`, function() {
 	})
 })
 
-describe('DB controller functions', function() {
-	it('loadAll should return an array of objects', done => {
+describe('DB controller unit tests', function() {
+	it('loadAll should return an array of doggo objects', done => {
 		dbcontroller
 			.loadAll()
 			.then(res => {
@@ -80,11 +80,50 @@ describe('DB controller functions', function() {
 			})
 	})
 
-	it('userExists should return a user', done => {
+	it('createAccount should create a user account', done => {
+		const formData = {
+			username: 'test1',
+			password: 'test1'
+		}
+
 		dbcontroller
-			.userExists('test')
+			.createAccount(formData)
+			.then(res => {
+				return dbcontroller.userExists(res.formData.username)
+			})
+			.then(data => {
+				data.should.be.a('object')
+				done()
+			})
+			.catch(err => {
+				expect(err).to.be.a('null')
+			})
+	})
+
+	it('userExists should return an existing user', done => {
+		dbcontroller
+			.userExists('test1')
 			.then(res => {
 				res.should.be.a('object')
+				done()
+			})
+			.catch(err => {
+				expect(err).to.be.a('null')
+			})
+	})
+
+	it('deleteUser should delete a user', done => {
+		dbcontroller
+			.userExists('test1')
+			.then(account => {
+				return dbcontroller.deleteUser(account.userid)
+			})
+			.then(result => {
+				// result should equal null
+				return dbcontroller.userExists('test1')
+			})
+			.then(response => {
+				expect(response).to.be.a('null')
 				done()
 			})
 			.catch(err => {
@@ -136,9 +175,63 @@ describe('DB controller functions', function() {
 				expect(err).to.be.a('null')
 			})
 	})
+
+	it('addDoggo should add a doggo in the db', done => {
+		const doggoData = {
+			doggoName: 'test dog',
+			description: 'test dog',
+			imageUrl: 'test dog',
+			userId: 53
+		}
+
+		dbcontroller
+			.addDoggo(doggoData)
+			.then(doggo => {
+				return dbcontroller.getDoggo(doggoData.doggoName)
+			})
+			.then(response => {
+				return dbcontroller.deleteDoggo(response.doggoId)
+			})
+			.then(res => {
+				expect(res).to.be.a('null')
+				done()
+			})
+			.catch(err => {
+				expect(err).to.be.a('null')
+			})
+	})
+
+	it('getDoggo should return doggo data', done => {
+		dbcontroller
+			.getDoggo('test dog')
+			.then(doggo => {
+				doggo.should.be.a('object')
+				doggo.doggoname.should.equal('test dog')
+				done()
+			})
+			.catch(err => {
+				console.log(err)
+				expect(err).to.be.a('null')
+			})
+	})
+
+	it('deleteDoggo should delete doggo from db', done => {
+		dbcontroller
+			.getDoggo('test dog')
+			.then(doggoData => {
+				return dbcontroller.deleteDoggo(doggoData.doggoid)
+			})
+			.then(res => {
+				expect(res).to.be.a('null')
+				done()
+			})
+			.catch(err => {
+				expect(err).to.be.a('null')
+			})
+	})
 })
 
-describe('S3 controller functions', function() {
+describe('S3 controller unit tests', function() {
 	it('getUploadUrl should return an object with upload key and url', done => {
 		s3controller
 			.getUploadUrl('20', 'image/jpeg')

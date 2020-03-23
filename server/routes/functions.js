@@ -124,6 +124,19 @@ const loadMyDoggos = (req, res) => {
 		})
 }
 
+const deleteDogFromDb = (req, res) => {
+	let doggoId = req.body.doggoId
+
+	db.deleteDoggo(doggoId)
+		.then(result => {
+			res.status(200).send({ 'Doggo deleted': `Doggo ID: ${doggoId}` })
+		})
+		.catch(error => {
+			res.status(500).send({ error: error.message })
+			console.log(error)
+		})
+}
+
 module.exports = {
 	registerUser,
 	createSession,
@@ -132,5 +145,6 @@ module.exports = {
 	loadAllDoggos,
 	getSignedUrl,
 	addDogToDb,
-	loadMyDoggos
+	loadMyDoggos,
+	deleteDogFromDb
 }

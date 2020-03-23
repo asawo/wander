@@ -30,6 +30,13 @@ const createAccount = async formData => {
 	return formData.username
 }
 
+const deleteUser = async userId => {
+	const result = await db.oneOrNone('DELETE FROM users WHERE userid = $1', [
+		userId
+	])
+	return result
+}
+
 const getCredentials = async username => {
 	const userCredentials = await db.oneOrNone(
 		'SELECT userid, username, password FROM users WHERE username = $1',
@@ -69,12 +76,30 @@ const loadMyDoggos = async userId => {
 	return result
 }
 
+const getDoggo = async doggoName => {
+	const result = await db.one(
+		'SELECT doggoname, doggoid FROM doggos WHERE doggoname = $1',
+		[doggoName]
+	)
+	return result
+}
+
+const deleteDoggo = async doggoId => {
+	const result = await db.none('DELETE FROM doggos WHERE doggoid = $1', [
+		doggoId
+	])
+	return result
+}
+
 module.exports = {
 	createAccount,
 	userExists,
+	deleteUser,
 	getCredentials,
 	authenticateUser,
 	addDoggo,
 	loadMyDoggos,
-	loadAll
+	loadAll,
+	getDoggo,
+	deleteDoggo
 }
