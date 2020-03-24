@@ -125,9 +125,17 @@ const loadMyDoggos = (req, res) => {
 }
 
 const deleteDogFromDb = (req, res) => {
-	let doggoId = req.body.doggoId
+	const doggoName = req.body.doggoName
+	let doggoId = ''
 
-	db.deleteDoggo(doggoId)
+	db.getDoggo(doggoName)
+		.then(doggo => {
+			doggoId.push(doggo.doggoid)
+			return s3.deleteImage(doggo.imageurl)
+		})
+		.then(response => {
+			return db.deleteDoggo(doggoId)
+		})
 		.then(result => {
 			res.status(200).send({ 'Doggo deleted': `Doggo ID: ${doggoId}` })
 		})
