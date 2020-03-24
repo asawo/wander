@@ -78,7 +78,7 @@ const loadMyDoggos = async userId => {
 
 const getDoggo = async doggoName => {
 	const result = await db.one(
-		'SELECT doggoname, doggoid FROM doggos WHERE doggoname = $1',
+		'SELECT doggoname, doggoid, imageurl FROM doggos WHERE doggoname = $1',
 		[doggoName]
 	)
 	return result
