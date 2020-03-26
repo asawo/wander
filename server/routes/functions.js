@@ -43,6 +43,7 @@ const signIn = (req, res) => {
 			}
 		})
 		.catch(error => {
+			res.status(500).json({ error: error.message })
 			console.log('signIn error: ', error)
 		})
 }
@@ -130,7 +131,7 @@ const deleteDogFromDb = (req, res) => {
 
 	db.getDoggo(doggoName)
 		.then(doggo => {
-			doggoId.push(doggo.doggoid)
+			doggoId.push(doggo.doggo)
 			return s3.deleteImage(doggo.imageurl)
 		})
 		.then(response => {

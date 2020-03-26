@@ -244,18 +244,18 @@ describe('S3 controller unit tests', function() {
 			})
 	})
 
-	it('deleteImage should delete an image from the s3 bucket', done => {
-		url =
-			'https://wander-love-images.s3-ap-northeast-1.amazonaws.com/35/fd58706f-6a0e-4e2c-91fb-252c6539b658.png'
-		// pass url from getDoggo in from getDoggo
-		s3controller
-			.deleteImage(url)
-			.then(res => {
-				console.log('res in test', res)
-				done()
-			})
-			.catch(err => {
-				console.log(err)
-			})
-	})
+	// it('deleteImage should delete an image from the s3 bucket', done => {
+	// 	url =
+	// 		// 'https://wander-love-images.s3-ap-northeast-1.amazonaws.com/35/fd58706f-6a0e-4e2c-91fb-252c6539b658.png'
+	// 		// pass url from getDoggo in from getDoggo
+	// 		s3controller
+	// 			.deleteImage(url)
+	// 			.then(res => {
+	// 				console.log('res in test', res)
+	// 				done()
+	// 			})
+	// 			.catch(err => {
+	// 				console.log(err)
+	// 			})
+	// })
 })
