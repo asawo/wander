@@ -60,7 +60,56 @@ logOutBtn.addEventListener('click', async e => {
 	}
 })
 
-const deleteModalBody = document.querySelector('.deleteModalBody')
+loadDoggos()
+	.then(result => {
+		// Add event listener on every doggo card's edit button
+		const editDoggo = document.querySelectorAll('.editDog')
+
+		editDoggo.forEach(doggo =>
+			doggo.addEventListener('click', async e => {
+				const doggoName =
+					e.target.parentElement.parentElement.nextElementSibling
+						.nextElementSibling.firstElementChild.innerText
+				const doggoDesc =
+					e.srcElement.parentElement.parentElement.nextElementSibling
+						.nextElementSibling.children[1].innerText
+
+				// Insert name and description into modal
+				const editModalName = document.querySelector('#editName')
+				const editModalDesc = document.querySelector('#editDescription')
+
+				editModalName.innerHTML = `
+					<label>Doggo name</label>
+					<input class="form-control" placeholder="${doggoName}" required>`
+				editModalDesc.innerHTML = `
+					<label class="mt-3">Doggo description</label>
+					<textarea class="form-control" placeholder="${doggoDesc}" rows="3" required></textarea>`
+
+				$('#editDog').modal('toggle')
+				// Put request for editing doggo
+			})
+		)
+
+		// Add event listener on every doggo card's delete button
+		const deleteDoggo = document.querySelectorAll('.deleteDog')
+
+		deleteDoggo.forEach(doggo => {
+			doggo.addEventListener('click', async e => {
+				const doggoName =
+					e.srcElement.parentNode.parentElement.nextElementSibling
+						.nextElementSibling.firstElementChild.innerText
+
+				// Insert doggo name into modal before toggling
+				const deleteModalBody = document.querySelector('.deleteModalBody')
+
+				deleteModalBody.innerHTML = `<p>Are you sure to delete  <span class="doggoName">${doggoName}</span> permanently?</p>`
+
+				$('#deleteDog').modal('toggle')
+				// delete dog request
+			})
+		})
+	})
+	.catch(error => console.log('Error: ', error))
 
 const deleteRequest = async (data = {}) => {
 	const response = await fetch('/users/delete-doggo', {
@@ -77,62 +126,65 @@ const deleteRequest = async (data = {}) => {
 	return { status, res }
 }
 
-loadDoggos()
-	.then(result => {
-		// Add event listener on every doggo card's edit button
-		const editDoggo = document.querySelectorAll('.editDog')
-
-		editDoggo.forEach(doggo =>
-			doggo.addEventListener('click', async e => {
-				const doggoName =
-					e.target.parentElement.parentElement.nextElementSibling
-						.nextElementSibling.firstElementChild.innerText
-
-				// let response = await fetch('/edit-doggo')
-				$('#editDog').modal('toggle')
-				// Put request for editing doggo
-			})
-		)
-
-		// Add event listener on every doggo card's delete button
-		const deleteDoggo = document.querySelectorAll('.deleteDog')
-
-		deleteDoggo.forEach(doggo => {
-			doggo.addEventListener('click', async e => {
-				const doggoName =
-					e.srcElement.parentNode.parentElement.nextElementSibling
-						.nextElementSibling.firstElementChild.innerText
-
-				// Insert doggo name into modal before toggling
-				deleteModalBody.innerHTML = `<p>Are you sure to delete  <span class="doggoName">${doggoName}</span> permanently?</p>`
-
-				$('#deleteDog').modal('toggle')
-				// delete dog request
-			})
-		})
-	})
-	.catch(error => console.log('Error: ', error))
-
 // Confirm delete button
-const confirmDelete = document.querySelectorAll('#confirmDelete')
+const confirmDelete = document.querySelector('#confirmDelete')
 
-confirmDelete.forEach(button => {
-	button.addEventListener('click', async e => {
-		const doggoName = document.querySelector('.doggoName').innerHTML
+confirmDelete.addEventListener('click', async e => {
+	const doggoName = document.querySelector('.doggoName').innerHTML
 
-		data = { doggoName }
-		deleteRequest(data)
-			.then(res => {
-				document.querySelector('.doggo-delete-success').style.display = 'block'
+	data = { doggoName }
+	deleteRequest(data)
+		.then(res => {
+			// confirm if response.ok
+			document.querySelector('.doggo-delete-success').style.display = 'block'
 
-				setTimeout(() => {
-					location.reload()
-				}, 1500)
-				console.log(res)
-			})
-			.catch(error => {
-				alert(error)
-				console.log({ error })
-			})
+			setTimeout(() => {
+				location.reload()
+			}, 1500)
+			console.log(res)
+		})
+		.catch(error => {
+			alert(error)
+			console.log({ error })
+		})
+})
+
+const editRequest = async (data = {}) => {
+	const response = await fetch('/users/delete-doggo', {
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		method: 'PUT',
+		body: JSON.stringify(data)
 	})
+
+	let status = response.status
+	let res = await response.json()
+
+	return { status, res }
+}
+
+const editForm = document.querySelector('#editForm')
+
+editForm.addEventListener('submit', async e => {
+	e.preventDefault()
+	const doggoName = e.target.elements[0].value
+	const doggoDesc = e.target.elements[1].value
+
+	console.log({ doggoName, doggoDesc })
+
+	data = { doggoName, doggoDesc }
+	editRequest(data)
+		.then(res => {
+			document.querySelector('.doggo-edit-success').style.display = 'block'
+
+			// setTimeout(() => {
+			// 	location.reload()
+			// }, 1500)
+			console.log(res)
+		})
+		.catch(error => {
+			alert(error)
+			console.log({ error })
+		})
 })
