@@ -83,13 +83,33 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
-					<div class="modal-body">
-						Forms (to be included )
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-info" id="editDogButton">Edit doggo</button>
-					</div>
+				<!-- Forms -->
+					<form id="editForm">
+						<div class="modal-body">
+							<div class="form-group" id="editName">
+								<label >Doggo name</label>
+								<input class="form-control" placeholder="" required>
+							</div>
+							<div class="form-group" id="editDescription">
+								<label class="mt-3">Doggo description</label>
+								<textarea class="form-control" rows="3"></textarea>
+							</div>
+							<!-- Success alert -->
+							<div class="mt-3 doggo-edit-success alert alert-success text-center" role="alert" style="display:none;">
+								Doggo updated. Almost a brand new dog! 👋
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							<input
+									type="submit"
+									id="confirmEdit"
+                  value="Edit doggo"
+                  placeholder="Edit doggo"
+                  class="btn btn-info"
+                />
+						</div>
+					</form>
 				</div>
 			</div>
 		</div> 
