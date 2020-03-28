@@ -131,7 +131,7 @@ const deleteDogFromDb = (req, res) => {
 
 	db.getDoggo(doggoName)
 		.then(doggo => {
-			doggoId.push(doggo.doggo)
+			doggoId = doggo.doggoid
 			return s3.deleteImage(doggo.imageurl)
 		})
 		.then(response => {
