@@ -32,43 +32,41 @@ newDog.addEventListener('submit', e => {
 		description: e.target.elements[2].value
 	}
 
+	let key = ''
+
 	postData('../users/add-doggos/upload', doggoProfile)
 		.then(data => {
 			if (data.status === 200) {
 				$('.doggo-created').show() // success label for creating doggo
 				return data.response
 			} else {
-				// $('.doggo-exists').show() // doggo exists!
 				return data.response
 			}
 		})
 		.then(res => {
-			// console.log('res ', res)
-			// console.log('doggoProfile ', doggoProfile)
+			key = res.key
 			// Upload doggo image here
-			fetch(res.url, {
+			return fetch(res.url, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': doggoProfile.doggoImageType
 				},
 				body: doggoProfile.doggoImage
-			}).then(result => {
-				const data = {
-					doggoName: doggoProfile.doggoName,
-					description: doggoProfile.description,
-					doggoImage: `https://wander-love-images.s3-ap-northeast-1.amazonaws.com/${res.key}`
-				}
-				console.log('posting this data to DB:', data)
-				postData('../users/add-doggos/db', data)
-					.then(res => console.log(res))
-					.catch(error => console.error('Error:', error))
 			})
+		})
+		.then(result => {
+			const data = {
+				doggoName: doggoProfile.doggoName,
+				description: doggoProfile.description,
+				doggoImage: `https://wander-love-images.s3-ap-northeast-1.amazonaws.com/${key}`
+			}
+			console.log('posting data to DB:', data)
+			return postData('../users/add-doggos/db', data)
 		})
 		.then(success => {
 			setTimeout(() => {
 				window.location.replace('/users/my-doggos')
 			}, 1500)
-			console.log(res)
 		})
 		.catch(error => console.log({ error }))
 })
