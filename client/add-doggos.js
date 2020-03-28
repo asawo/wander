@@ -16,7 +16,7 @@ async function postData(url = '', data = {}) {
 
 // Change file name
 $('input[type="file"]').change(function(e) {
-	var fileName = e.target.files[0].name
+	const fileName = e.target.files[0].name
 	$('.custom-file-label').html(fileName)
 })
 
@@ -64,6 +64,13 @@ newDog.addEventListener('submit', e => {
 					.catch(error => console.error('Error:', error))
 			})
 		})
+		.then(success => {
+			setTimeout(() => {
+				window.location.replace('/users/my-doggos')
+			}, 1500)
+			console.log(res)
+		})
+		.catch(error => console.log({ error }))
 })
 
 // Log out
