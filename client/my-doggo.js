@@ -150,7 +150,7 @@ confirmDelete.addEventListener('click', async e => {
 })
 
 const editRequest = async (data = {}) => {
-	const response = await fetch('/users/delete-doggo', {
+	const response = await fetch('/users/edit-doggo', {
 		headers: {
 			'Content-Type': 'application/json'
 		},
