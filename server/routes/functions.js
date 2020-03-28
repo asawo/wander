@@ -146,6 +146,15 @@ const deleteDogFromDb = (req, res) => {
 		})
 }
 
+const updateDog = (req, res) => {
+	const doggoData = {
+		doggoName: req.body.doggoName,
+		doggoDesc: req.body.doggoDesc
+	}
+
+	console.log({ doggoData })
+}
+
 module.exports = {
 	registerUser,
 	createSession,
@@ -155,5 +164,6 @@ module.exports = {
 	getSignedUrl,
 	addDogToDb,
 	loadMyDoggos,
-	deleteDogFromDb
+	deleteDogFromDb,
+	updateDog
 }
