@@ -93,13 +93,11 @@ const listenToDeleteModal = () => {
 				e.srcElement.parentNode.parentElement.nextElementSibling
 					.nextElementSibling.firstElementChild.innerText
 
-			// Insert doggo name into modal before toggling
 			const deleteModalBody = document.querySelector('.deleteModalBody')
 
 			deleteModalBody.innerHTML = `<p>Are you sure to delete  <span class="doggoName">${doggoName}</span> permanently?</p>`
 
 			$('#deleteDog').modal('toggle')
-			// delete dog request
 		})
 	})
 }
@@ -108,25 +106,6 @@ loadDoggos()
 	.then(result => {
 		listenToDeleteModal()
 		listenToEditModal()
-
-		// Add event listener on every doggo card's delete button
-		// const deleteDoggo = document.querySelectorAll('.deleteDog')
-
-		// deleteDoggo.forEach(doggo => {
-		// 	doggo.addEventListener('click', async e => {
-		// 		const doggoName =
-		// 			e.srcElement.parentNode.parentElement.nextElementSibling
-		// 				.nextElementSibling.firstElementChild.innerText
-
-		// 		// Insert doggo name into modal before toggling
-		// 		const deleteModalBody = document.querySelector('.deleteModalBody')
-
-		// 		deleteModalBody.innerHTML = `<p>Are you sure to delete  <span class="doggoName">${doggoName}</span> permanently?</p>`
-
-		// 		$('#deleteDog').modal('toggle')
-		// 		// delete dog request
-		// 	})
-		// })
 	})
 	.catch(error => console.log('Error: ', error))
 
