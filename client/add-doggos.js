@@ -8,8 +8,8 @@ async function postData(url = '', data = {}) {
 		body: JSON.stringify(data)
 	})
 
-	let status = response.status
-	let res = await response.json()
+	const status = response.status
+	const res = await response.json()
 
 	return { status: status, response: res }
 }
@@ -25,7 +25,7 @@ const newDog = document.querySelector('#newDog')
 newDog.addEventListener('submit', e => {
 	e.preventDefault()
 
-	let doggoProfile = {
+	const doggoProfile = {
 		doggoName: e.target.elements[0].value,
 		doggoImage: e.target.elements[1].files[0],
 		doggoImageType: e.target.elements[1].files[0].type,
@@ -75,7 +75,7 @@ newDog.addEventListener('submit', e => {
 const logOutBtn = document.querySelector('#logOut')
 
 logOutBtn.addEventListener('click', async e => {
-	let response = await fetch('/logout')
+	const response = await fetch('/logout')
 
 	if (response.ok) {
 		window.location.replace(response.url)

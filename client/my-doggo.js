@@ -28,8 +28,8 @@ const addDoggos = (doggoName, description, imageurl) => {
 }
 
 async function loadDoggos() {
-	let response = await fetch('/users/load-my-doggos')
-	let resJson = await response.json()
+	const response = await fetch('/users/load-my-doggos')
+	const resJson = await response.json()
 
 	if (response.ok && resJson.doggos.length > 0) {
 		myDoggos.innerHTML = ''
@@ -46,7 +46,7 @@ async function loadDoggos() {
 const logOutBtn = document.querySelector('#logOut')
 
 logOutBtn.addEventListener('click', async e => {
-	let response = await fetch('/logout')
+	const response = await fetch('/logout')
 
 	if (response.ok) {
 		window.location.replace(response.url)
@@ -139,8 +139,8 @@ const deleteRequest = async (data = {}) => {
 		body: JSON.stringify(data)
 	})
 
-	let status = response.status
-	let res = await response.json()
+	const status = response.status
+	const res = await response.json()
 
 	return { status, res }
 }
@@ -183,8 +183,8 @@ const editRequest = async (data = {}) => {
 		body: JSON.stringify(data)
 	})
 
-	let status = response.status
-	let res = await response.json()
+	const status = response.status
+	const res = await response.json()
 
 	return { status, res }
 }
@@ -194,7 +194,7 @@ const editForm = document.querySelector('#editForm')
 editForm.addEventListener('submit', async e => {
 	e.preventDefault()
 
-	data = {
+	const data = {
 		doggoName: e.target.elements[0].placeholder,
 		newDogName: e.target.elements[0].value,
 		newDogDesc: (newDogDesc = e.target.elements[1].value)

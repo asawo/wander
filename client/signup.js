@@ -11,8 +11,8 @@ async function postData(url = '', data = {}) {
 		body: JSON.stringify(data)
 	})
 
-	let status = response.status
-	let res = await response.json()
+	const status = response.status
+	const res = await response.json()
 
 	return { status: status, response: res }
 }
