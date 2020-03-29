@@ -215,9 +215,33 @@ describe('DB controller unit tests', function() {
 			})
 	})
 
-	it('deleteDoggo should delete doggo from db', done => {
+	it('updateDoggo should return updated doggo data', done => {
+		let doggoId = ''
+		const newDogName = 'test dog 2.0'
+		const newDogDesc = 'updated test doggo'
+
 		dbcontroller
 			.getDoggo('test dog')
+			.then(doggo => {
+				doggoId = doggo.doggoid
+
+				return dbcontroller.updateDoggo(doggoId, newDogName, newDogDesc)
+			})
+			.then(res => {
+				res[0].doggoname.should.equal(newDogName)
+				res[0].description.should.equal(newDogDesc)
+				res.should.be.a('array')
+				done()
+			})
+			.catch(err => {
+				console.log(err)
+				expect(err).to.be.a('null')
+			})
+	})
+
+	it('deleteDoggo should delete doggo from db', done => {
+		dbcontroller
+			.getDoggo('test dog 2.0')
 			.then(doggoData => {
 				return dbcontroller.deleteDoggo(doggoData.doggoid)
 			})
