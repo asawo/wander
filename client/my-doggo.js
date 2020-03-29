@@ -133,7 +133,6 @@ confirmDelete.addEventListener('click', async e => {
 	data = { doggoName }
 	deleteRequest(data)
 		.then(res => {
-			// confirm if response.ok
 			document.querySelector('.doggo-delete-success').style.display = 'block'
 
 			setTimeout(() => {
