@@ -91,6 +91,14 @@ const deleteDoggo = async doggoId => {
 	return result
 }
 
+const updateDoggo = async (doggoId, newDogName, newDogDesc) => {
+	const result = await db.any(
+		'UPDATE doggos SET doggoname = $1, description = $2 WHERE doggoid = $3 RETURNING doggoname, description, dateupdated',
+		[newDogName, newDogDesc, doggoId]
+	)
+	return result
+}
+
 module.exports = {
 	createAccount,
 	userExists,
@@ -101,5 +109,6 @@ module.exports = {
 	loadMyDoggos,
 	loadAll,
 	getDoggo,
-	deleteDoggo
+	deleteDoggo,
+	updateDoggo
 }

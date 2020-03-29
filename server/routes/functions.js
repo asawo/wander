@@ -149,10 +149,24 @@ const deleteDogFromDb = (req, res) => {
 const updateDog = (req, res) => {
 	const doggoData = {
 		doggoName: req.body.doggoName,
-		doggoDesc: req.body.doggoDesc
+		newDogName: req.body.newDogName,
+		newDogDesc: req.body.newDogDesc
 	}
 
-	console.log({ doggoData })
+	let doggoId = ''
+
+	db.getDoggo(doggoData.doggoName)
+		.then(doggo => {
+			doggoId = doggo.doggoid
+
+			return db.updateDoggo(doggoId, doggoData.newDogName, doggoData.newDogDesc)
+		})
+		.then(response => {
+			res.status(200).send({ response })
+		})
+		.catch(error => {
+			res.status(500).send({ error: error.message })
+		})
 }
 
 module.exports = {
