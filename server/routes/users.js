@@ -33,4 +33,8 @@ router.post('/add-doggos/upload', func.getSignedUrl)
 
 router.post('/add-doggos/db', func.addDogToDb)
 
+router.delete('/delete-doggo', func.deleteDogFromDb)
+
+router.put('/edit-doggo', func.updateDog)
+
 module.exports = router

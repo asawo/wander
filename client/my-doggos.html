@@ -49,6 +49,71 @@
 			<!-- Load my doggos here -->
 		</div>
 
+		<!-- Delete dog modal here -->
+		<div class="modal fade" id="deleteDog" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modalTitle">Delete doggo?</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="deleteModalBody text-center mt-3">
+						Are you sure to delete this doggo permanently?
+					</div>
+					<div class="mt-3 doggo-delete-success alert alert-success text-center" role="alert" style="display:none;">
+						Doggo deleted. Bye doggo, be free! 👋
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-danger" id="confirmDelete">Delete doggo</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+ <!-- Edit dog modal here -->
+		<div class="modal fade" id="editDog" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modalTitle">Edit doggo?</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+				<!-- Forms -->
+					<form id="editForm">
+						<div class="modal-body">
+							<div class="form-group" id="editName">
+								<label >Doggo name</label>
+								<input class="form-control" placeholder="" required>
+							</div>
+							<div class="form-group" id="editDescription">
+								<label class="mt-3">Doggo description</label>
+								<textarea class="form-control" rows="3"></textarea>
+							</div>
+							<!-- Success alert -->
+							<div class="mt-3 doggo-edit-success alert alert-success text-center" role="alert" style="display:none;">
+								Doggo updated. Almost a brand new dog! 👋
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							<input
+									type="submit"
+									id="confirmEdit"
+                  value="Edit doggo"
+                  placeholder="Edit doggo"
+                  class="btn btn-info"
+                />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div> 
+
 		<footer class="mt-5 p-3 text-center bg-dark text-light">
 			<span>
 				Created by asawo

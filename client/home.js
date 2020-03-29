@@ -18,8 +18,8 @@ const addDoggos = (doggoName, description, imageurl) => {
 }
 
 async function loadDoggos() {
-	let response = await fetch('/all-doggos')
-	let resJson = await response.json()
+	const response = await fetch('/all-doggos')
+	const resJson = await response.json()
 	console.log(resJson)
 
 	if (response.ok && resJson.doggos.length > 0) {
@@ -39,8 +39,7 @@ loadDoggos()
 const logOutBtn = document.querySelector('#logOut')
 
 logOutBtn.addEventListener('click', async e => {
-	let response = await fetch('/logout')
-	console.log(response)
+	const response = await fetch('/logout')
 
 	if (response.ok) {
 		window.location.replace(response.url)

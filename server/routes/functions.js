@@ -12,19 +12,14 @@ const registerUser = (req, res) => {
 			if (user) {
 				res.status(400).json({ Error: `${formData.username} already exists` })
 			} else {
-				db.createAccount(formData)
-					.then(() => {
-						res.status(200).json({ Success: `${formData.username} created` })
-					})
-					.catch(error => {
-						res.status(400).json({ error: error.message })
-						console.log('error', error.message)
-					})
+				return db.createAccount(formData)
 			}
 		})
+		.then(response => {
+			res.status(200).json({ Success: `${response.formData.username} created` })
+		})
 		.catch(error => {
-			res.status(500).json({ error: error.message }) // look into the right http status codes to return
-			console.log('error', error.message)
+			console.log('registerUser error: ', error.message)
 		})
 }
 
@@ -35,29 +30,25 @@ const signIn = (req, res) => {
 	}
 	db.getCredentials(formData.username)
 		.then(user => {
-			db.authenticateUser(user, formData.password)
-				.then(authenticated => {
-					if (authenticated === true) {
-						createSession(req.session, user)
-						res.status(301).send({ authenticated: true, user: user.username })
-					} else {
-						res.status(400).send({ message: 'Invalid username or password' })
-						console.log('Invalid username or password')
-					}
-				})
-				.catch(error => {
-					res.status(401).send({ error: error.message })
-					console.log(error)
-				})
+			return db.authenticateUser(user, formData.password)
+		})
+		.then(authenticated => {
+			if (authenticated.result === true) {
+				createSession(req.session, authenticated.user)
+				res
+					.status(301)
+					.send({ authenticated: true, user: authenticated.user.username })
+			} else {
+				res.status(400).send({ message: 'Invalid username or password' })
+			}
 		})
 		.catch(error => {
-			res.status(500).send({ error: error.message })
-			console.log(error)
+			res.status(500).json({ error: error.message })
+			console.log('signIn error: ', error)
 		})
 }
 
 const createSession = (session, user) => {
-	console.log('SUCCESS, creating session and redirecting to /users/home')
 	if (session) {
 		session.user = {
 			userId: user.userid,
@@ -134,6 +125,50 @@ const loadMyDoggos = (req, res) => {
 		})
 }
 
+const deleteDogFromDb = (req, res) => {
+	const doggoName = req.body.doggoName
+	let doggoId = ''
+
+	db.getDoggo(doggoName)
+		.then(doggo => {
+			doggoId = doggo.doggoid
+			return s3.deleteImage(doggo.imageurl)
+		})
+		.then(response => {
+			return db.deleteDoggo(doggoId)
+		})
+		.then(result => {
+			res.status(200).send({ 'Doggo deleted': `Doggo ID: ${doggoId}` })
+		})
+		.catch(error => {
+			res.status(500).send({ error: error.message })
+			console.log(error)
+		})
+}
+
+const updateDog = (req, res) => {
+	const doggoData = {
+		doggoName: req.body.doggoName,
+		newDogName: req.body.newDogName,
+		newDogDesc: req.body.newDogDesc
+	}
+
+	let doggoId = ''
+
+	db.getDoggo(doggoData.doggoName)
+		.then(doggo => {
+			doggoId = doggo.doggoid
+
+			return db.updateDoggo(doggoId, doggoData.newDogName, doggoData.newDogDesc)
+		})
+		.then(response => {
+			res.status(200).send({ response })
+		})
+		.catch(error => {
+			res.status(500).send({ error: error.message })
+		})
+}
+
 module.exports = {
 	registerUser,
 	createSession,
@@ -142,5 +177,7 @@ module.exports = {
 	loadAllDoggos,
 	getSignedUrl,
 	addDogToDb,
-	loadMyDoggos
+	loadMyDoggos,
+	deleteDogFromDb,
+	updateDog
 }

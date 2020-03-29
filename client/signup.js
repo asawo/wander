@@ -11,14 +11,13 @@ async function postData(url = '', data = {}) {
 		body: JSON.stringify(data)
 	})
 
-	let status = response.status
-	let res = await response.json()
+	const status = response.status
+	const res = await response.json()
 
 	return { status: status, response: res }
 }
 
 // Log in
-
 signUpForm.addEventListener('submit', e => {
 	e.preventDefault()
 	document.querySelector('.alert').style.display = 'none'
@@ -30,34 +29,31 @@ signUpForm.addEventListener('submit', e => {
 
 	const secondPassword = e.target.elements[2].value
 
-	if (signUpFormData.password === secondPassword) {
-		postData('../signup', signUpFormData).then(data => {
-			if (data.status === 200) {
-				// Show success banner
-				document.querySelector('.sign-up-success').style.display = 'block'
-
-				postData('../signin', signUpFormData).then(data => {
-					console.log(data)
-					if (data.status === 301) {
-						setTimeout(() => {
-							window.location.replace('/users/home')
-						}, 1000)
-					}
-				})
-			} else {
-				// $('.sign-up-alert').show()
-				document.querySelector('.user-already-exists').style.display = 'block'
-			}
-		})
-	} else {
-		// $('.wrong-password').show()
+	if (signUpFormData.password !== secondPassword) {
 		document.querySelector('.wrong-password').style.display = 'block'
+	} else {
+		postData('../signup', signUpFormData)
+			.then(data => {
+				if (data.status === 200) {
+					document.querySelector('.sign-up-success').style.display = 'block'
+				} else {
+					document.querySelector('.user-already-exists').style.display = 'block'
+				}
+				return postData('../signin', signUpFormData)
+			})
+			.then(data => {
+				if (data.status === 301) {
+					setTimeout(() => {
+						window.location.replace('/users/home')
+					}, 1000)
+				}
+			})
+			.catch(error => console.log({ error }))
 	}
 })
 
 // Hides all alerts on keyup
 signUpForm.addEventListener('keyup', e => {
-	// e.preventDefault()
 	document.querySelectorAll('.alert').forEach(alert => {
 		alert.style.display = 'none'
 	})
@@ -73,7 +69,6 @@ signInForm.addEventListener('submit', e => {
 	}
 
 	postData('../signin', signInFormData).then(data => {
-		console.log(data)
 		if (data.status === 301) {
 			window.location.replace('/users/home')
 		} else {
@@ -83,6 +78,5 @@ signInForm.addEventListener('submit', e => {
 })
 
 signInForm.addEventListener('keyup', e => {
-	// e.preventDefault()
 	document.querySelector('.sign-in-alert').style.display = 'none'
 })
