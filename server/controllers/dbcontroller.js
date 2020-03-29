@@ -55,15 +55,21 @@ const authenticateUser = async (user, password) => {
 
 const loadAll = async () => {
 	const result = await db.any(
-		'SELECT doggoname, description, imageurl FROM doggos ORDER BY dateupdated DESC'
+		'SELECT doggoname, description, imageurl, username FROM doggos ORDER BY dateupdated DESC'
 	)
 	return result
 }
 
 const addDoggo = async dogData => {
 	const result = await db.none(
-		'INSERT INTO doggos(doggoname, description, imageurl, userid) VALUES($1,$2,$3,$4)',
-		[dogData.doggoName, dogData.description, dogData.imageUrl, dogData.userId]
+		'INSERT INTO doggos(doggoname, description, imageurl, userid, username) VALUES($1,$2,$3,$4,$5)',
+		[
+			dogData.doggoName,
+			dogData.description,
+			dogData.imageUrl,
+			dogData.userId,
+			dogData.username
+		]
 	)
 	return result
 }

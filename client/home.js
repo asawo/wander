@@ -1,6 +1,6 @@
 const timeline = document.querySelector('#timeline')
 
-const addDoggos = (doggoName, description, imageurl) => {
+const addDoggos = (doggoName, description, imageurl, username) => {
 	timeline.innerHTML += `
 	<div class="doggos text-left text-wrap container" style="overflow-wrap: break-word; background-color: #ffffff; max-width: 660px;">
 		<div class="mt-5 mx-auto">
@@ -11,6 +11,7 @@ const addDoggos = (doggoName, description, imageurl) => {
 				<span class="mt-3">
 					<a href="#" class="btn btn-dark">Pat 👋</a>
 					<a href="#" class="btn btn-secondary">Like <i class="fa fa-heart"></i></a>
+					<p class="mb-0 font-italic text-muted text-right">Created by ${username}</p>
 				</span>
 			</div>
 		</div>
@@ -25,7 +26,12 @@ async function loadDoggos() {
 	if (response.ok && resJson.doggos.length > 0) {
 		timeline.innerHTML = ''
 		resJson.doggos.forEach(doggo => {
-			addDoggos(doggo.doggoname, doggo.description, doggo.imageurl)
+			addDoggos(
+				doggo.doggoname,
+				doggo.description,
+				doggo.imageurl,
+				doggo.username
+			)
 		})
 	} else if (response.ok && resJson.doggos.length === 0) {
 		console.log('HTTP-status: ' + response.status + ' but no data')

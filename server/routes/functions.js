@@ -99,7 +99,8 @@ const addDogToDb = (req, res) => {
 		userId: req.session.user.userId,
 		doggoName: req.body.doggoName,
 		imageUrl: req.body.doggoImage,
-		description: req.body.description
+		description: req.body.description,
+		username: req.session.user.username
 	}
 
 	db.addDoggo(dogData)
@@ -115,9 +116,10 @@ const addDogToDb = (req, res) => {
 
 const loadMyDoggos = (req, res) => {
 	let userId = req.session.user.userId
+
 	db.loadMyDoggos(userId)
 		.then(doggos => {
-			res.status(200).send({ doggos: doggos })
+			res.status(200).send({ doggos })
 		})
 		.catch(error => {
 			res.status(500).send({ error: error.message })
