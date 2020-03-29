@@ -9,11 +9,11 @@ const addDoggos = (doggoName, description, imageurl) => {
 				<span class="mt-3 text-center">
 
 					<button type="button" class="btn btn-info editDog">
-						Edit <i class="fa fa-edit"></i>
+						Edit ✏️</i>
 					</button>
 
 					<button type="button" class="btn btn-danger deleteDog">
-						Delete <i class="fa fa-trash"></i>
+						Delete 🔥</i>
 					</button>
 
 				</span>

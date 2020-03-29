@@ -9,8 +9,8 @@ const addDoggos = (doggoName, description, imageurl) => {
 				<h1 class="dogName">${doggoName}</h1>
 				<p class="dogDescription">${description}</p>
 				<span class="mt-3">
-					<a href="#" class="btn btn-dark">Pat</a>
-					<a href="#" class="btn btn-secondary">Like</a>
+					<a href="#" class="btn btn-dark">Pat 👋</a>
+					<a href="#" class="btn btn-secondary">Like <i class="fa fa-heart"></i></a>
 				</span>
 			</div>
 		</div>
