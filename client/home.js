@@ -8,10 +8,10 @@ const addDoggos = (doggoName, description, imageurl, username) => {
 			<div class="card-body">
 				<h1 class="dogName">${doggoName}</h1>
 				<p class="dogDescription">${description}</p>
+				<p class="font-italic text-muted"> – Created by ${username}</p>
 				<span class="mt-3">
 					<a href="#" class="btn btn-dark">Pat 👋</a>
 					<a href="#" class="btn btn-secondary">Like <i class="fa fa-heart"></i></a>
-					<p class="mb-0 font-italic text-muted text-right">Created by ${username}</p>
 				</span>
 			</div>
 		</div>
