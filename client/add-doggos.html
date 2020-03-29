@@ -42,30 +42,28 @@
 		</nav>
 <!-- Main content -->
     <div class="container text-center mt-4"><h1>Add your doggo!</h1></div>
-		<div class="container text-center">
+		<div class="container text-center" style="max-width: 400px">
       <form id="newDog" class="form-group" enctype="multipart/form-data">
-        <div class="row">
-          <div class="col-sm">
+    
+          <div class="nameForm">
             <input
-          type="text"
-          name="doggoname"
-          id="doggoName"
-          class="form-control mt-3"
-          placeholder="Doggo's name"
-          required
-        />
+							type="text"
+							name="doggoname"
+							id="doggoName"
+							class="form-control mt-3"
+							placeholder="Doggo's name"
+							required
+						/>
           </div>
-          <div class="col-sm">
-            <div class="input-group mt-3">
-							<div class="custom-file">
-								<input type="file" accept="image/*" class="custom-file-input" id="inputGroupFile01"
-									aria-describedby="uploadFile">
-								<label class="custom-file-label text-left" for="inputGroupFile01">Choose doggo image</label>
-							</div>
+      
+					<div class="input-group mt-3">
+						<div class="custom-file">
+							<input type="file" accept="image/*" class="custom-file-input" id="inputGroupFile01"
+								aria-describedby="uploadFile">
+							<label class="custom-file-label text-left" for="inputGroupFile01">Choose doggo image</label>
 						</div>
-          </div>
-        </div>
-
+					</div>
+    
         <textarea class="form-control mt-3" placeholder="Describe your doggo!"id="doggoDescription" rows="3"></textarea>
         
         <div class="mt-3 doggo-created alert alert-success collapse alert-dismissible" role="alert" style="display:none;">

@@ -22,10 +22,6 @@ const addDoggos = (doggoName, description, imageurl) => {
 			<div class="card-body">
 				<h1 class="dogName">${doggoName}</h1>
 				<p class="dogDescription">${description}</p>
-				<span class="mt-3">
-					<a href="#" class="btn btn-primary">Pat</a>
-					<a href="#" class="btn btn-secondary">Like</a>
-				</span>
 			</div>
 		</div>
 	</div> \n`
@@ -51,7 +47,6 @@ const logOutBtn = document.querySelector('#logOut')
 
 logOutBtn.addEventListener('click', async e => {
 	let response = await fetch('/logout')
-	console.log(response)
 
 	if (response.ok) {
 		window.location.replace(response.url)
@@ -60,54 +55,78 @@ logOutBtn.addEventListener('click', async e => {
 	}
 })
 
-loadDoggos()
-	.then(result => {
-		// Add event listener on every doggo card's edit button
-		const editDoggo = document.querySelectorAll('.editDog')
+const listenToEditModal = () => {
+	const editDoggo = document.querySelectorAll('.editDog')
 
-		editDoggo.forEach(doggo =>
-			doggo.addEventListener('click', async e => {
-				const doggoName =
-					e.target.parentElement.parentElement.nextElementSibling
-						.nextElementSibling.firstElementChild.innerText
-				const doggoDesc =
-					e.srcElement.parentElement.parentElement.nextElementSibling
-						.nextElementSibling.children[1].innerText
+	editDoggo.forEach(doggo =>
+		doggo.addEventListener('click', async e => {
+			const doggoName =
+				e.target.parentElement.parentElement.nextElementSibling
+					.nextElementSibling.firstElementChild.innerText
+			const doggoDesc =
+				e.srcElement.parentElement.parentElement.nextElementSibling
+					.nextElementSibling.children[1].innerText
 
-				// Insert name and description into modal
-				const editModalName = document.querySelector('#editName')
-				const editModalDesc = document.querySelector('#editDescription')
+			// Insert name and description into modal
+			const editModalName = document.querySelector('#editName')
+			const editModalDesc = document.querySelector('#editDescription')
 
-				editModalName.innerHTML = `
+			editModalName.innerHTML = `
 					<label>Doggo name</label>
 					<input class="form-control" placeholder="${doggoName}" required>`
-				editModalDesc.innerHTML = `
+			editModalDesc.innerHTML = `
 					<label class="mt-3">Doggo description</label>
 					<textarea class="form-control" placeholder="${doggoDesc}" rows="3" required></textarea>`
 
-				$('#editDog').modal('toggle')
-				// Put request for editing doggo
-			})
-		)
+			$('#editDog').modal('toggle')
+			// Put request for editing doggo
+		})
+	)
+}
+
+const listenToDeleteModal = () => {
+	const deleteDoggo = document.querySelectorAll('.deleteDog')
+
+	deleteDoggo.forEach(doggo => {
+		doggo.addEventListener('click', async e => {
+			const doggoName =
+				e.srcElement.parentNode.parentElement.nextElementSibling
+					.nextElementSibling.firstElementChild.innerText
+
+			// Insert doggo name into modal before toggling
+			const deleteModalBody = document.querySelector('.deleteModalBody')
+
+			deleteModalBody.innerHTML = `<p>Are you sure to delete  <span class="doggoName">${doggoName}</span> permanently?</p>`
+
+			$('#deleteDog').modal('toggle')
+			// delete dog request
+		})
+	})
+}
+
+loadDoggos()
+	.then(result => {
+		listenToDeleteModal()
+		listenToEditModal()
 
 		// Add event listener on every doggo card's delete button
-		const deleteDoggo = document.querySelectorAll('.deleteDog')
+		// const deleteDoggo = document.querySelectorAll('.deleteDog')
 
-		deleteDoggo.forEach(doggo => {
-			doggo.addEventListener('click', async e => {
-				const doggoName =
-					e.srcElement.parentNode.parentElement.nextElementSibling
-						.nextElementSibling.firstElementChild.innerText
+		// deleteDoggo.forEach(doggo => {
+		// 	doggo.addEventListener('click', async e => {
+		// 		const doggoName =
+		// 			e.srcElement.parentNode.parentElement.nextElementSibling
+		// 				.nextElementSibling.firstElementChild.innerText
 
-				// Insert doggo name into modal before toggling
-				const deleteModalBody = document.querySelector('.deleteModalBody')
+		// 		// Insert doggo name into modal before toggling
+		// 		const deleteModalBody = document.querySelector('.deleteModalBody')
 
-				deleteModalBody.innerHTML = `<p>Are you sure to delete  <span class="doggoName">${doggoName}</span> permanently?</p>`
+		// 		deleteModalBody.innerHTML = `<p>Are you sure to delete  <span class="doggoName">${doggoName}</span> permanently?</p>`
 
-				$('#deleteDog').modal('toggle')
-				// delete dog request
-			})
-		})
+		// 		$('#deleteDog').modal('toggle')
+		// 		// delete dog request
+		// 	})
+		// })
 	})
 	.catch(error => console.log('Error: ', error))
 
@@ -139,9 +158,15 @@ confirmDelete.addEventListener('click', async e => {
 			document.querySelector('.doggo-delete-success').style.display = 'block'
 
 			setTimeout(() => {
-				location.reload()
+				document.querySelector('.doggo-delete-success').style.display = 'none'
+				$('#deleteDog').modal('toggle')
 			}, 1500)
-			console.log(res)
+
+			return loadDoggos()
+		})
+		.then(next => {
+			listenToDeleteModal()
+			listenToEditModal()
 		})
 		.catch(error => {
 			alert(error)
@@ -168,20 +193,27 @@ const editForm = document.querySelector('#editForm')
 
 editForm.addEventListener('submit', async e => {
 	e.preventDefault()
-	const doggoName = e.target.elements[0].value
-	const doggoDesc = e.target.elements[1].value
 
-	console.log({ doggoName, doggoDesc })
+	data = {
+		doggoName: e.target.elements[0].placeholder,
+		newDogName: e.target.elements[0].value,
+		newDogDesc: (newDogDesc = e.target.elements[1].value)
+	}
 
-	data = { doggoName, doggoDesc }
 	editRequest(data)
 		.then(res => {
 			document.querySelector('.doggo-edit-success').style.display = 'block'
 
-			// setTimeout(() => {
-			// 	location.reload()
-			// }, 1500)
-			console.log(res)
+			setTimeout(() => {
+				document.querySelector('.doggo-edit-success').style.display = 'none'
+				$('#editDog').modal('toggle')
+			}, 1500)
+
+			return loadDoggos()
+		})
+		.then(next => {
+			listenToDeleteModal()
+			listenToEditModal()
 		})
 		.catch(error => {
 			alert(error)
