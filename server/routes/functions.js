@@ -20,6 +20,7 @@ const registerUser = (req, res) => {
 		})
 		.catch(error => {
 			console.log('registerUser error: ', error.message)
+			res.status(500).send({ error: error.message })
 		})
 }
 
