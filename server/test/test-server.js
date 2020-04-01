@@ -2,6 +2,7 @@ const chai = require('chai'),
 	should = chai.should(),
 	expect = chai.expect
 const chaiHttp = require('chai-http')
+const sinon = require('sinon')
 const server = require('../index.js')
 const dbcontroller = require('../controllers/dbcontroller.js')
 const s3controller = require('../controllers/s3controller.js')
