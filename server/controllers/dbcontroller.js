@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const SALT_ROUNDS = 10
-const pgp = require('pg-promise')()
+const pgp = require('pg-promise')({ noLocking: true })
 const CONNECTION_STRING =
 	process.env.DATABASE_URL || 'postgres://localhost:5432/wander'
 const db = pgp(CONNECTION_STRING)
@@ -9,7 +9,7 @@ const db = pgp(CONNECTION_STRING)
 // DB queries and handling
 //################################################
 
-const userExists = async username => {
+const userExists = async (username) => {
 	const result = await db.oneOrNone(
 		'SELECT userid FROM users WHERE username = $1',
 		[username]
@@ -17,7 +17,7 @@ const userExists = async username => {
 	return result
 }
 
-const createAccount = async formData => {
+const createAccount = async (formData) => {
 	const hash = await bcrypt.hash(formData.password, SALT_ROUNDS)
 
 	if (hash !== null) {
@@ -25,19 +25,19 @@ const createAccount = async formData => {
 			'INSERT INTO users(username, password) VALUES($1,$2)',
 			[formData.username, hash]
 		)
-		return { result, formData } // should be null if everything was successful
+		return { result } // should be null if everything was successful
 	}
 	return formData.username
 }
 
-const deleteUser = async userId => {
+const deleteUser = async (userId) => {
 	const result = await db.oneOrNone('DELETE FROM users WHERE userid = $1', [
-		userId
+		userId,
 	])
 	return result
 }
 
-const getCredentials = async username => {
+const getCredentials = async (username) => {
 	const userCredentials = await db.oneOrNone(
 		'SELECT userid, username, password FROM users WHERE username = $1',
 		[username]
@@ -60,7 +60,7 @@ const loadAll = async () => {
 	return result
 }
 
-const addDoggo = async dogData => {
+const addDoggo = async (dogData) => {
 	const result = await db.none(
 		'INSERT INTO doggos(doggoname, description, imageurl, userid, username) VALUES($1,$2,$3,$4,$5)',
 		[
@@ -68,13 +68,13 @@ const addDoggo = async dogData => {
 			dogData.description,
 			dogData.imageUrl,
 			dogData.userId,
-			dogData.username
+			dogData.username,
 		]
 	)
 	return result
 }
 
-const loadMyDoggos = async userId => {
+const loadMyDoggos = async (userId) => {
 	const result = await db.any(
 		'SELECT doggoname, description, imageurl FROM doggos WHERE userid = $1 ORDER BY dateupdated DESC',
 		[userId]
@@ -82,7 +82,7 @@ const loadMyDoggos = async userId => {
 	return result
 }
 
-const getDoggo = async doggoName => {
+const getDoggo = async (doggoName) => {
 	const result = await db.one(
 		'SELECT doggoname, doggoid, imageurl FROM doggos WHERE doggoname = $1',
 		[doggoName]
@@ -90,9 +90,9 @@ const getDoggo = async doggoName => {
 	return result
 }
 
-const deleteDoggo = async doggoId => {
+const deleteDoggo = async (doggoId) => {
 	const result = await db.none('DELETE FROM doggos WHERE doggoid = $1', [
-		doggoId
+		doggoId,
 	])
 	return result
 }
@@ -116,5 +116,7 @@ module.exports = {
 	loadAll,
 	getDoggo,
 	deleteDoggo,
-	updateDoggo
+	updateDoggo,
+	db,
+	bcrypt,
 }
