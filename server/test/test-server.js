@@ -70,7 +70,7 @@ describe(`Test for "/signin" endpoint`, function () {
 	})
 })
 
-describe('DB controller', () => {
+describe('DB controller unit tests', () => {
 	afterEach(() => {
 		sinon.restore()
 	})
@@ -207,15 +207,10 @@ describe('DB controller', () => {
 			imageUrl: 'test dog',
 			userId: 53,
 		}
+		const noneStub = sinon.stub(dbcontroller.db, 'none').resolves(null)
 
 		dbcontroller
 			.addDoggo(doggoData)
-			.then((doggo) => {
-				return dbcontroller.getDoggo(doggoData.doggoName)
-			})
-			.then((response) => {
-				return dbcontroller.deleteDoggo(response.doggoId)
-			})
 			.then((res) => {
 				expect(res).to.be.a('null')
 				done()
@@ -226,15 +221,21 @@ describe('DB controller', () => {
 	})
 
 	it('getDoggo should return doggo data', (done) => {
+		const doggoStub = {
+			doggoname: 'stubbyBoi',
+			description: 'stubby',
+			imgUrl: 'http://www.stubby.boi',
+		}
+		const oneStub = sinon.stub(dbcontroller.db, 'one').resolves(doggoStub)
+
 		dbcontroller
 			.getDoggo('test dog')
 			.then((doggo) => {
 				doggo.should.be.a('object')
-				doggo.doggoname.should.equal('test dog')
+				doggo.should.equal(doggoStub)
 				done()
 			})
 			.catch((err) => {
-				console.log(err)
 				expect(err).to.be.a('null')
 			})
 	})
@@ -244,31 +245,27 @@ describe('DB controller', () => {
 		const newDogName = 'test dog 2.0'
 		const newDogDesc = 'updated test doggo'
 
-		dbcontroller
-			.getDoggo('test dog')
-			.then((doggo) => {
-				doggoId = doggo.doggoid
+		const doggoStub = { doggoId, newDogName, newDogDesc }
 
-				return dbcontroller.updateDoggo(doggoId, newDogName, newDogDesc)
-			})
+		const anyStub = sinon.stub(dbcontroller.db, 'any').resolves(doggoStub)
+
+		dbcontroller
+			.updateDoggo(doggoId, newDogName, newDogDesc)
 			.then((res) => {
-				res[0].doggoname.should.equal(newDogName)
-				res[0].description.should.equal(newDogDesc)
-				res.should.be.a('array')
+				res.should.equal(doggoStub)
+				res.should.be.a('object')
 				done()
 			})
 			.catch((err) => {
-				console.log(err)
 				expect(err).to.be.a('null')
 			})
 	})
 
 	it('deleteDoggo should delete doggo from db', (done) => {
+		const noneStub = sinon.stub(dbcontroller.db, 'none').resolves(null)
+
 		dbcontroller
-			.getDoggo('test dog 2.0')
-			.then((doggoData) => {
-				return dbcontroller.deleteDoggo(doggoData.doggoid)
-			})
+			.deleteDoggo('stubbyDogToDelete')
 			.then((res) => {
 				expect(res).to.be.a('null')
 				done()
