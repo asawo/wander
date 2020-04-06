@@ -134,7 +134,7 @@ describe('DB controller', () => {
 			.resolves(null)
 
 		dbcontroller
-			.deleteUser()
+			.deleteUser('fakeUser')
 			.then((result) => {
 				expect(result).to.be.a('null')
 				done()
@@ -145,10 +145,20 @@ describe('DB controller', () => {
 	})
 
 	it('getCredentials should return username and password', (done) => {
+		const userCredStub = {
+			userid: 1,
+			username: 'fakeUsername',
+			password: 'fakePassword',
+		}
+		const oneOrNoneStub = sinon
+			.stub(dbcontroller.db, 'oneOrNone')
+			.resolves(userCredStub)
+
 		dbcontroller
-			.getCredentials('test')
+			.getCredentials()
 			.then((res) => {
 				res.should.be.a('object')
+				res.should.equal(userCredStub)
 				done()
 			})
 			.catch((err) => {
@@ -157,12 +167,12 @@ describe('DB controller', () => {
 	})
 
 	it('authenticateUser should authenticate user', (done) => {
+		const bcryptStub = sinon.stub(dbcontroller.bcrypt, 'compare').resolves(true)
+
 		dbcontroller
-			.getCredentials('test')
-			.then((user) => {
-				return dbcontroller.authenticateUser(user, 'test')
-			})
+			.authenticateUser('fakeUser', 'test')
 			.then((res) => {
+				res.should.be.a('object')
 				res.result.should.be.a('boolean')
 				res.result.should.equal(true)
 				done()
@@ -173,18 +183,19 @@ describe('DB controller', () => {
 	})
 
 	it('authenticateUser should reject fake user', (done) => {
+		const bcryptStub = sinon
+			.stub(dbcontroller.bcrypt, 'compare')
+			.resolves(false)
+
 		dbcontroller
-			.getCredentials('test')
-			.then((user) => {
-				return dbcontroller.authenticateUser(user, 'wrongPassword')
-			})
+			.authenticateUser('fakeUser', 'wrongPassword')
 			.then((res) => {
+				res.should.be.a('object')
 				res.result.should.be.a('boolean')
 				res.result.should.equal(false)
 				done()
 			})
 			.catch((err) => {
-				console.log(err)
 				expect(err).to.be.a('null')
 			})
 	})
