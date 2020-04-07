@@ -25,7 +25,7 @@ const createAccount = async (formData) => {
 			'INSERT INTO users(username, password) VALUES($1,$2)',
 			[formData.username, hash]
 		)
-		return { result } // should be null if everything was successful
+		return { result, formData } // should be null if everything was successful
 	}
 	return formData.username
 }

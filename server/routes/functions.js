@@ -1,39 +1,64 @@
-const db = require('../controllers/dbcontroller.js')
-const s3 = require('../controllers/s3controller.js')
+const dbcontroller = require('../controllers/dbcontroller.js')
+const s3controller = require('../controllers/s3controller.js')
 
-const registerUser = (req, res) => {
+const registerUser = async (req, res) => {
 	const formData = {
 		username: req.body.username,
-		password: req.body.password
+		password: req.body.password,
 	}
 
-	db.userExists(formData.username)
-		.then(user => {
-			if (user) {
-				res.status(400).json({ Error: `${formData.username} already exists` })
-			} else {
-				return db.createAccount(formData)
-			}
-		})
-		.then(response => {
+	try {
+		const user = await dbcontroller.userExists(formData.username)
+
+		if (user === null) {
+			const response = await dbcontroller.createAccount(formData)
 			res.status(200).json({ Success: `${response.formData.username} created` })
-		})
-		.catch(error => {
-			console.log('registerUser error: ', error.message)
-			res.status(500).send({ error: error.message })
-		})
+		} else {
+			res.status(400).send({ Error: `${formData.username} already exists` })
+		}
+	} catch (error) {
+		console.log('in trycatch block', { error })
+		res.status(error.code).send(`${error.name}: ${error.message}`)
+	}
+
+	// dbcontroller
+	// 	.userExists(formData.username)
+	// 	.then((user) => {
+	// 		console.log({ user })
+	// 		if (user) {
+	// 			return true
+	// 		} else {
+	// 			return dbcontroller.createAccount(formData)
+	// 		}
+	// 	})
+	// 	.then((response) => {
+	// 		console.log({ response })
+	// 		if (response === null) {
+	// 			res
+	// 				.status(200)
+	// 				.json({ Success: `${response.formData.username} created` })
+	// 		} else if (response === true) {
+	// 			res.status(400).send({ Error: `${formData.username} already exists` })
+	// 		}
+	// 	})
+	// 	.catch((error) => {
+	// 		console.log({ error })
+	// 		res.status(error.code).send(`${error.name}: ${error.message}`)
+	// 	})
 }
 
 const signIn = (req, res) => {
 	const formData = {
 		username: req.body.username,
-		password: req.body.password
+		password: req.body.password,
 	}
-	db.getCredentials(formData.username)
-		.then(user => {
-			return db.authenticateUser(user, formData.password)
+
+	dbcontroller
+		.getCredentials(formData.username)
+		.then((user) => {
+			return dbcontroller.authenticateUser(user, formData.password)
 		})
-		.then(authenticated => {
+		.then((authenticated) => {
 			if (authenticated.result === true) {
 				createSession(req.session, authenticated.user)
 				res
@@ -43,9 +68,9 @@ const signIn = (req, res) => {
 				res.status(400).send({ message: 'Invalid username or password' })
 			}
 		})
-		.catch(error => {
-			res.status(500).json({ error: error.message })
-			console.log('signIn error: ', error)
+		.catch((error) => {
+			console.log(error)
+			res.status(error.code).send(`${error.name}: ${error.message}`)
 		})
 }
 
@@ -53,14 +78,14 @@ const createSession = (session, user) => {
 	if (session) {
 		session.user = {
 			userId: user.userid,
-			username: user.username
+			username: user.username,
 		}
 	}
 }
 
 const logOut = (req, res) => {
 	if (req.session) {
-		req.session.destroy(error => {
+		req.session.destroy((error) => {
 			if (error) {
 				next(error)
 			} else {
@@ -71,11 +96,12 @@ const logOut = (req, res) => {
 }
 
 const loadAllDoggos = (req, res) => {
-	db.loadAll()
-		.then(allDoggos => {
+	dbcontroller
+		.loadAll()
+		.then((allDoggos) => {
 			res.status(200).send({ doggos: allDoggos })
 		})
-		.catch(error => {
+		.catch((error) => {
 			res.status(500).send({ error: error.message })
 			console.log(error)
 		})
@@ -85,11 +111,12 @@ const getSignedUrl = (req, res) => {
 	const doggoImageType = req.body.doggoImageType
 	const userId = req.session.user.userId
 
-	s3.getUploadUrl(userId, doggoImageType)
-		.then(url => {
+	s3controller
+		.getUploadUrl(userId, doggoImageType)
+		.then((url) => {
 			res.send(url)
 		})
-		.catch(error => {
+		.catch((error) => {
 			res.status(500).send({ error: error.message })
 			console.log(error)
 		})
@@ -101,15 +128,16 @@ const addDogToDb = (req, res) => {
 		doggoName: req.body.doggoName,
 		imageUrl: req.body.doggoImage,
 		description: req.body.description,
-		username: req.session.user.username
+		username: req.session.user.username,
 	}
 
-	db.addDoggo(dogData)
-		.then(result => {
+	dbcontroller
+		.addDoggo(dogData)
+		.then((result) => {
 			res.status(200).send({ message: 'SUCCESS' })
 			console.log(`Added ${dogData.doggoName}!`)
 		})
-		.catch(error => {
+		.catch((error) => {
 			res.status(500).send({ error: error.message })
 			console.log(error)
 		})
@@ -118,11 +146,12 @@ const addDogToDb = (req, res) => {
 const loadMyDoggos = (req, res) => {
 	let userId = req.session.user.userId
 
-	db.loadMyDoggos(userId)
-		.then(doggos => {
+	dbcontroller
+		.loadMyDoggos(userId)
+		.then((doggos) => {
 			res.status(200).send({ doggos })
 		})
-		.catch(error => {
+		.catch((error) => {
 			res.status(500).send({ error: error.message })
 			console.log(error)
 		})
@@ -132,18 +161,19 @@ const deleteDogFromDb = (req, res) => {
 	const doggoName = req.body.doggoName
 	let doggoId = ''
 
-	db.getDoggo(doggoName)
-		.then(doggo => {
+	dbcontroller
+		.getDoggo(doggoName)
+		.then((doggo) => {
 			doggoId = doggo.doggoid
-			return s3.deleteImage(doggo.imageurl)
+			return s3controller.deleteImage(doggo.imageurl)
 		})
-		.then(response => {
-			return db.deleteDoggo(doggoId)
+		.then((response) => {
+			return dbcontroller.deleteDoggo(doggoId)
 		})
-		.then(result => {
+		.then((result) => {
 			res.status(200).send({ 'Doggo deleted': `Doggo ID: ${doggoId}` })
 		})
-		.catch(error => {
+		.catch((error) => {
 			res.status(500).send({ error: error.message })
 			console.log(error)
 		})
@@ -153,21 +183,26 @@ const updateDog = (req, res) => {
 	const doggoData = {
 		doggoName: req.body.doggoName,
 		newDogName: req.body.newDogName,
-		newDogDesc: req.body.newDogDesc
+		newDogDesc: req.body.newDogDesc,
 	}
 
 	let doggoId = ''
 
-	db.getDoggo(doggoData.doggoName)
-		.then(doggo => {
+	dbcontroller
+		.getDoggo(doggoData.doggoName)
+		.then((doggo) => {
 			doggoId = doggo.doggoid
 
-			return db.updateDoggo(doggoId, doggoData.newDogName, doggoData.newDogDesc)
+			return dbcontroller.updateDoggo(
+				doggoId,
+				doggoData.newDogName,
+				doggoData.newDogDesc
+			)
 		})
-		.then(response => {
+		.then((response) => {
 			res.status(200).send({ response })
 		})
-		.catch(error => {
+		.catch((error) => {
 			res.status(500).send({ error: error.message })
 		})
 }
@@ -182,5 +217,7 @@ module.exports = {
 	addDogToDb,
 	loadMyDoggos,
 	deleteDogFromDb,
-	updateDog
+	updateDog,
+	dbcontroller,
+	s3controller,
 }
