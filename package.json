@@ -5,7 +5,7 @@
 	"main": "./server/index.js",
 	"scripts": {
 		"dev": "nodemon server/index.js",
-		"test": "mocha server/test/test-server.js",
+		"test": "nyc --reporter=text mocha ./server/test",
 		"local": "heroku local web",
 		"pkill": "sudo pkill -u postgres"
 	},
@@ -36,6 +36,7 @@
 	},
 	"devDependencies": {
 		"chai-as-promised": "^7.1.1",
+		"nyc": "^15.0.1",
 		"sinon": "^9.0.1"
 	}
 }
