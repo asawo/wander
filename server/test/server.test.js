@@ -88,20 +88,20 @@ describe('DB controller unit tests', () => {
 	})
 
 	it('createAccount should create a user account', (done) => {
-		const objectStub = {
+		const userStub = {
 			result: null,
 			formData: { username: 'test1', password: 'test1' },
 		}
 
 		const bcryptStub = sinon.stub(dbcontroller.bcrypt, 'hash').resolves('hi')
 
-		const noneStub = sinon.stub(dbcontroller.db, 'none').resolves(objectStub)
+		const noneStub = sinon.stub(dbcontroller.db, 'none').resolves(userStub)
 
 		dbcontroller
-			.createAccount(objectStub.formData)
+			.createAccount(userStub.formData)
 			.then((res) => {
 				res.should.be.a('object')
-				res.result.should.equal(objectStub)
+				res.result.should.equal(userStub)
 				done()
 			})
 			.catch((err) => {
@@ -110,17 +110,17 @@ describe('DB controller unit tests', () => {
 	})
 
 	it('userExists should return an existing user', (done) => {
-		const userObject = { userid: 10 }
+		const userIdStub = { userid: 10 }
 
 		const oneOrNoneStub = sinon
 			.stub(dbcontroller.db, 'oneOrNone')
-			.resolves(userObject)
+			.resolves(userIdStub)
 
 		dbcontroller
 			.userExists('test1')
 			.then((res) => {
 				res.should.be.a('object')
-				res.should.equal(userObject)
+				res.should.equal(userIdStub)
 				done()
 			})
 			.catch((err) => {
