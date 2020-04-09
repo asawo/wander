@@ -2,7 +2,7 @@ const timeline = document.querySelector('#timeline')
 
 const addDoggos = (doggoName, description, imageurl, username) => {
 	timeline.innerHTML += `
-	<div class="doggos text-left text-wrap container" style="overflow-wrap: break-word; background-color: #ffffff; max-width: 660px;">
+	<div class="doggos text-left text-wrap container" style="border-radius: 5px; overflow-wrap: break-word; background-color: #ffffff; max-width: 660px;">
 		<div class="mt-5 mx-auto">
 			<img src=${imageurl} class="pt-3" alt="Doggo image" width="100%">
 			<div class="card-body">
@@ -25,7 +25,7 @@ async function loadDoggos() {
 
 	if (response.ok && resJson.doggos.length > 0) {
 		timeline.innerHTML = ''
-		resJson.doggos.forEach(doggo => {
+		resJson.doggos.forEach((doggo) => {
 			addDoggos(
 				doggo.doggoname,
 				doggo.description,
@@ -44,7 +44,7 @@ loadDoggos()
 
 const logOutBtn = document.querySelector('#logOut')
 
-logOutBtn.addEventListener('click', async e => {
+logOutBtn.addEventListener('click', async (e) => {
 	const response = await fetch('/logout')
 
 	if (response.ok) {
