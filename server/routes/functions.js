@@ -12,66 +12,41 @@ const registerUser = async (req, res) => {
 
 		if (user === null) {
 			const response = await dbcontroller.createAccount(formData)
-			res.status(200).json({ Success: `${response.formData.username} created` })
+			res.status(200).send({ Success: `${formData.username} created` })
 		} else {
 			res.status(400).send({ Error: `${formData.username} already exists` })
 		}
 	} catch (error) {
-		console.log('in trycatch block', { error })
+		console.log({ error })
 		res.status(error.code).send(`${error.name}: ${error.message}`)
 	}
-
-	// dbcontroller
-	// 	.userExists(formData.username)
-	// 	.then((user) => {
-	// 		console.log({ user })
-	// 		if (user) {
-	// 			return true
-	// 		} else {
-	// 			return dbcontroller.createAccount(formData)
-	// 		}
-	// 	})
-	// 	.then((response) => {
-	// 		console.log({ response })
-	// 		if (response === null) {
-	// 			res
-	// 				.status(200)
-	// 				.json({ Success: `${response.formData.username} created` })
-	// 		} else if (response === true) {
-	// 			res.status(400).send({ Error: `${formData.username} already exists` })
-	// 		}
-	// 	})
-	// 	.catch((error) => {
-	// 		console.log({ error })
-	// 		res.status(error.code).send(`${error.name}: ${error.message}`)
-	// 	})
 }
 
-const signIn = (req, res) => {
+const signIn = async (req, res) => {
 	const formData = {
 		username: req.body.username,
 		password: req.body.password,
 	}
 
-	dbcontroller
-		.getCredentials(formData.username)
-		.then((user) => {
-			return dbcontroller.authenticateUser(user, formData.password)
-		})
-		.then((authenticated) => {
-			if (authenticated.result === true) {
-				createSession(req.session, authenticated.user)
-				res
-					.status(301)
-					.send({ authenticated: true, user: authenticated.user.username })
-			} else {
-				res.status(400).send({ message: 'Invalid username or password' })
-			}
-		})
-		.catch((error) => {
-			console.log(error)
-			res.status(error.code).send(`${error.name}: ${error.message}`)
-		})
+	try {
+		const user = await dbcontroller.getCredentials(formData.username)
+		const authenticated = await dbcontroller.authenticateUser(
+			user,
+			formData.password
+		)
+
+		if (authenticated.result === true) {
+			createSession(req.session, authenticated.user)
+			res
+				.status(301)
+				.send({ authenticated: true, user: authenticated.user.username })
+		} else {
+			res.status(400).send({ message: 'Invalid username or password' })
+		}
+	} catch (error) {
+		console.log(error)
+		res.status(error.code).send(`${error.name}: ${error.message}`)
+	}
 }
 
 const createSession = (session, user) => {
@@ -98,8 +73,8 @@ const logOut = (req, res) => {
 const loadAllDoggos = (req, res) => {
 	dbcontroller
 		.loadAll()
-		.then((allDoggos) => {
-			res.status(200).send({ doggos: allDoggos })
+		.then((doggos) => {
+			res.status(200).send({ doggos })
 		})
 		.catch((error) => {
 			res.status(500).send({ error: error.message })
