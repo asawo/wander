@@ -55,7 +55,7 @@ const authenticateUser = async (user, password) => {
 
 const loadAll = async () => {
 	const result = await db.any(
-		'SELECT doggoname, description, imageurl, username FROM doggos ORDER BY dateupdated DESC'
+		'SELECT doggoid, doggoname, description, imageurl, username FROM doggos ORDER BY dateupdated DESC'
 	)
 	return result
 }

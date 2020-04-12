@@ -182,6 +182,21 @@ const updateDog = (req, res) => {
 		})
 }
 
+const likeDog = async (req, res) => {
+	console.log(req.body)
+	const doggoId = req.body.doggoId
+	const userId = req.session.user.userId
+	console.log(userId, doggoId)
+	try {
+		const result = await dbcontroller.likeDoggo(userId, doggoId)
+		console.log({ result })
+		return result
+	} catch (error) {
+		console.log({ error })
+		res.status(error.code).send(`${error.name}: ${error.message}`)
+	}
+}
+
 module.exports = {
 	registerUser,
 	createSession,
@@ -193,6 +208,7 @@ module.exports = {
 	loadMyDoggos,
 	deleteDogFromDb,
 	updateDog,
+	likeDog,
 	dbcontroller,
 	s3controller,
 }
