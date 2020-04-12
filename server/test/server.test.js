@@ -274,6 +274,49 @@ describe('DB controller unit tests', () => {
 				expect(err).to.be.a('null')
 			})
 	})
+
+	// ###################
+	// ↓↓↓↓ Like and pat tests
+	// ###################
+	it('getLikes should get number of likes for a doggo', (done) => {
+		const oneStub = sinon
+			.stub(dbcontroller.db, 'one')
+			.resolves({ likecount: 5 })
+
+		dbcontroller
+			.getLikes(5)
+			.then((res) => {
+				expect(res).to.deep.equal({ likecount: 5 })
+				done()
+			})
+			.catch((err) => {
+				console.log(err)
+				expect(err).to.be.a('null')
+			})
+	})
+
+	it('likeDoggo should create a like entry in DB', (done) => {
+		const dbData = {
+			doggoid: 5,
+			userid: 5,
+			dateliked: '2020-03-15 20:46:55.72179',
+		}
+		const anyStub = sinon.stub(dbcontroller.db, 'any').resolves(dbData)
+
+		dbcontroller
+			.likeDoggo(5, 5)
+			.then((res) => {
+				expect(res).to.deep.equal(dbData)
+				done()
+			})
+			.catch((err) => {
+				console.log(err)
+				expect(err).to.be.a('null')
+			})
+	})
+	// ###################
+	// ↑↑↑↑ Like and pat tests
+	// ###################
 })
 
 describe('S3 controller unit tests', function () {

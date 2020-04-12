@@ -105,6 +105,25 @@ const updateDoggo = async (doggoId, newDogName, newDogDesc) => {
 	return result
 }
 
+// #####################
+// getLikes, likeDoggo
+// #####################
+const getLikes = async (doggoId) => {
+	const result = await db.one(
+		'SELECT SUM(likecount) FROM likes WHERE doggoid = $1',
+		[doggoId]
+	)
+	return result
+}
+
+const likeDoggo = async (userId, doggoId) => {
+	const result = await db.any(
+		'INSERT INTO likes(doggoid, userid) VALUES($1,$2) RETURNING doggoid, userid, dateliked',
+		[doggoId, userId]
+	)
+	return result
+}
+
 module.exports = {
 	createAccount,
 	userExists,
@@ -119,4 +138,6 @@ module.exports = {
 	updateDoggo,
 	db,
 	bcrypt,
+	getLikes,
+	likeDoggo,
 }
