@@ -1,6 +1,13 @@
 const timeline = document.querySelector('#timeline')
 
-const addDoggos = (doggoId, doggoName, description, imageurl, username) => {
+const addDoggos = (
+	doggoId,
+	doggoName,
+	description,
+	imageurl,
+	username,
+	likes
+) => {
 	timeline.innerHTML += `
 	<div class="doggos text-left text-wrap container" style="border-radius: 5px; overflow-wrap: break-word; background-color: #ffffff; max-width: 660px;">
 		<div class="mt-5 mx-auto">
@@ -13,8 +20,7 @@ const addDoggos = (doggoId, doggoName, description, imageurl, username) => {
 
 					<button type="button" class="btn btn-dark" id="patButton">Pat 👋</button>
 
-					<button type="button" class="btn btn-secondary" id="likeButton">Like <i class="fa fa-heart" style="pointer-events: none;"></i></button>
-
+					<button type="button" class="btn btn-secondary" id="likeButton"><i class="fa fa-heart" style="pointer-events: none;"></i> (${likes})</button>
 				</span>
 			</div>
 		</div>
@@ -34,7 +40,8 @@ async function loadDoggos() {
 				doggo.doggoname,
 				doggo.description,
 				doggo.imageurl,
-				doggo.username
+				doggo.username,
+				doggo.likestotal
 			)
 		})
 	} else if (response.ok && resJson.doggos.length === 0) {
@@ -46,7 +53,6 @@ async function loadDoggos() {
 }
 
 const likeDog = async (doggoId = {}) => {
-	console.log('in likeDog, doggoId passed in is', doggoId)
 	const response = await fetch('/users/like-doggo', {
 		headers: {
 			'Content-Type': 'application/json',
@@ -74,9 +80,15 @@ const listenToLikeButton = () => {
 	likeButtons.forEach((button) => {
 		button.addEventListener('click', async (e) => {
 			const doggoId = e.srcElement.parentNode.id
-			console.log(doggoId)
+
+			if (!button.classList.contains('liked')) {
+				// likeDog({ doggoId })
+			} else {
+				// make function unlikeDog({ doggoId }) here
+			}
+			// loadAll then toggleLike (or else loadAll overwrites toggleLike)
 			toggleLike(button)
-			// likeDog({ doggoId })
+			// somehow add "liked" class if user already liked the doggo - need to maybe tweak loadDoggos()
 		})
 	})
 }
