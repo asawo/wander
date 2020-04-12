@@ -55,7 +55,7 @@ const authenticateUser = async (user, password) => {
 
 const loadAll = async () => {
 	const result = await db.any(
-		'SELECT doggoid, doggoname, description, imageurl, username FROM doggos ORDER BY dateupdated DESC'
+		'SELECT doggos.doggoid, doggoname, description, imageurl, username, SUM(likes.likecount) AS likestotal FROM doggos INNER JOIN likes ON doggos.doggoid = likes.doggoid GROUP BY doggos.doggoid, likes.likecount'
 	)
 	return result
 }
