@@ -97,12 +97,12 @@ const listenToLikeButton = () => {
 			const doggoId = e.srcElement.parentNode.id
 
 			if (!button.classList.contains('liked')) {
-				toggleLike(button)
 				// likeDog({ doggoId })
 			} else {
-				// unlikeDog({doggoId})
 				// make function unlikeDog({ doggoId }) here
 			}
+
+			toggleLike(button)
 			// somehow add "liked" class if user already liked the doggo - need to maybe tweak loadDoggos()
 		})
 	})
