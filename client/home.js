@@ -1,6 +1,13 @@
+const alreadyLiked = async (doggoId) => {
+	const result = await fetch(`/users/check-like/${doggoId}`)
+	const response = await result.json()
+
+	return response
+}
+
 const timeline = document.querySelector('#timeline')
 
-const addDoggos = (
+const addDoggos = async (
 	doggoId,
 	doggoName,
 	description,
@@ -20,11 +27,17 @@ const addDoggos = (
 
 					<button type="button" class="btn btn-dark" id="patButton">Pat 👋</button>
 
-					<button type="button" class="btn btn-secondary" id="likeButton"><i class="fa fa-heart" style="pointer-events: none;"></i> (${likes})</button>
+					<button type="button" class="btn btn-secondary like-button-${doggoId}" id="likeButton"><i class="fa fa-heart" style="pointer-events: none;"></i> (${likes})</button>
 				</span>
 			</div>
 		</div>
 	</div> \n`
+
+	const button = document.querySelector(`.like-button-${doggoId}`)
+
+	if (await alreadyLiked(doggoId)) {
+		toggleLike(button)
+	}
 }
 
 async function loadDoggos() {
@@ -49,7 +62,7 @@ async function loadDoggos() {
 		})
 	} else if (response.ok && resJson.doggos.length === 0) {
 		console.log('HTTP-status: ' + response.status + ' but no data')
-		alert('HTTP-Error: ' + response.status)
+		alert('HTTP-Error: ' + response.status + ' but no data')
 	} else {
 		alert('HTTP-Error: ' + response.status)
 	}
@@ -85,12 +98,13 @@ const listenToLikeButton = () => {
 			const doggoId = e.srcElement.parentNode.id
 
 			if (!button.classList.contains('liked')) {
-				// likeDog({ doggoId })
+				likeDog({ doggoId })
+				toggleLike(button)
 			} else {
+				// unlikeDog({doggoId})
 				// make function unlikeDog({ doggoId }) here
 			}
-			// loadAll then toggleLike (or else loadAll overwrites toggleLike)
-			toggleLike(button)
+			// toggleLike(button)
 			// somehow add "liked" class if user already liked the doggo - need to maybe tweak loadDoggos()
 		})
 	})
