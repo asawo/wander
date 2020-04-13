@@ -1,7 +1,7 @@
 const alreadyLiked = async (doggoId) => {
 	const result = await fetch(`/users/check-like/${doggoId}`)
 	const response = await result.json()
-
+	console.log(response)
 	return response
 }
 
@@ -33,9 +33,8 @@ const addDoggos = async (
 		</div>
 	</div> \n`
 
-	const button = document.querySelector(`.like-button-${doggoId}`)
-
 	if (await alreadyLiked(doggoId)) {
+		const button = document.querySelector(`.like-button-${doggoId}`)
 		toggleLike(button)
 	}
 }
@@ -98,13 +97,12 @@ const listenToLikeButton = () => {
 			const doggoId = e.srcElement.parentNode.id
 
 			if (!button.classList.contains('liked')) {
-				likeDog({ doggoId })
 				toggleLike(button)
+				// likeDog({ doggoId })
 			} else {
 				// unlikeDog({doggoId})
 				// make function unlikeDog({ doggoId }) here
 			}
-			// toggleLike(button)
 			// somehow add "liked" class if user already liked the doggo - need to maybe tweak loadDoggos()
 		})
 	})
