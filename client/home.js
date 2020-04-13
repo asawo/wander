@@ -97,7 +97,7 @@ const listenToLikeButton = () => {
 			const doggoId = e.srcElement.parentNode.id
 
 			if (!button.classList.contains('liked')) {
-				// likeDog({ doggoId })
+				likeDog({ doggoId })
 			} else {
 				// make function unlikeDog({ doggoId }) here
 			}
