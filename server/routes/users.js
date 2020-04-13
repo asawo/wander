@@ -37,4 +37,8 @@ router.delete('/delete-doggo', func.deleteDogFromDb)
 
 router.put('/edit-doggo', func.updateDog)
 
+router.post('/like-doggo', func.likeDog)
+
+router.get('/check-like/:id', func.checkIfLiked)
+
 module.exports = router

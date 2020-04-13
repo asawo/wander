@@ -1,0 +1,14 @@
+#likeButton {
+	color: white;
+}
+
+#likeButton:hover > i {
+	color: rgb(238, 153, 153);
+}
+
+#likeButton.liked {
+	background-color: #5a6268;
+}
+#likeButton.liked > i {
+	color: rgb(255, 111, 111);
+}

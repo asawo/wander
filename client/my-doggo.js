@@ -3,7 +3,7 @@ const myDoggos = document.querySelector('#myDoggos')
 
 const addDoggos = (doggoName, description, imageurl) => {
 	myDoggos.innerHTML += `
-	<div class="doggos text-left text-wrap container" style="overflow-wrap: break-word; background-color: #ffffff; max-width: 660px;">
+	<div class="doggos text-left text-wrap container" style="border-radius: 5px; overflow-wrap: break-word; background-color: #ffffff; max-width: 660px;">
 		<div class="mt-5 pt-3 mx-auto">
 			<div class="text-right">
 				<span class="mt-3 text-center">
@@ -33,7 +33,7 @@ async function loadDoggos() {
 
 	if (response.ok && resJson.doggos.length > 0) {
 		myDoggos.innerHTML = ''
-		resJson.doggos.forEach(doggo => {
+		resJson.doggos.forEach((doggo) => {
 			addDoggos(doggo.doggoname, doggo.description, doggo.imageurl)
 		})
 	} else if (response.ok && resJson.doggos.length === 0) {
@@ -45,7 +45,7 @@ async function loadDoggos() {
 
 const logOutBtn = document.querySelector('#logOut')
 
-logOutBtn.addEventListener('click', async e => {
+logOutBtn.addEventListener('click', async (e) => {
 	const response = await fetch('/logout')
 
 	if (response.ok) {
@@ -58,8 +58,8 @@ logOutBtn.addEventListener('click', async e => {
 const listenToEditModal = () => {
 	const editDoggo = document.querySelectorAll('.editDog')
 
-	editDoggo.forEach(doggo =>
-		doggo.addEventListener('click', async e => {
+	editDoggo.forEach((doggo) =>
+		doggo.addEventListener('click', async (e) => {
 			const doggoName =
 				e.target.parentElement.parentElement.nextElementSibling
 					.nextElementSibling.firstElementChild.innerText
@@ -87,8 +87,8 @@ const listenToEditModal = () => {
 const listenToDeleteModal = () => {
 	const deleteDoggo = document.querySelectorAll('.deleteDog')
 
-	deleteDoggo.forEach(doggo => {
-		doggo.addEventListener('click', async e => {
+	deleteDoggo.forEach((doggo) => {
+		doggo.addEventListener('click', async (e) => {
 			const doggoName =
 				e.srcElement.parentNode.parentElement.nextElementSibling
 					.nextElementSibling.firstElementChild.innerText
@@ -103,19 +103,19 @@ const listenToDeleteModal = () => {
 }
 
 loadDoggos()
-	.then(result => {
+	.then((result) => {
 		listenToDeleteModal()
 		listenToEditModal()
 	})
-	.catch(error => console.log('Error: ', error))
+	.catch((error) => console.log('Error: ', error))
 
 const deleteRequest = async (data = {}) => {
 	const response = await fetch('/users/delete-doggo', {
 		headers: {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
 		},
 		method: 'DELETE',
-		body: JSON.stringify(data)
+		body: JSON.stringify(data),
 	})
 
 	const status = response.status
@@ -127,12 +127,12 @@ const deleteRequest = async (data = {}) => {
 // Confirm delete button
 const confirmDelete = document.querySelector('#confirmDelete')
 
-confirmDelete.addEventListener('click', async e => {
+confirmDelete.addEventListener('click', async (e) => {
 	const doggoName = document.querySelector('.doggoName').innerHTML
 
 	data = { doggoName }
 	deleteRequest(data)
-		.then(res => {
+		.then((res) => {
 			document.querySelector('.doggo-delete-success').style.display = 'block'
 
 			setTimeout(() => {
@@ -142,11 +142,11 @@ confirmDelete.addEventListener('click', async e => {
 
 			return loadDoggos()
 		})
-		.then(next => {
+		.then((next) => {
 			listenToDeleteModal()
 			listenToEditModal()
 		})
-		.catch(error => {
+		.catch((error) => {
 			alert(error)
 			console.log({ error })
 		})
@@ -155,10 +155,10 @@ confirmDelete.addEventListener('click', async e => {
 const editRequest = async (data = {}) => {
 	const response = await fetch('/users/edit-doggo', {
 		headers: {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
 		},
 		method: 'PUT',
-		body: JSON.stringify(data)
+		body: JSON.stringify(data),
 	})
 
 	const status = response.status
@@ -169,17 +169,17 @@ const editRequest = async (data = {}) => {
 
 const editForm = document.querySelector('#editForm')
 
-editForm.addEventListener('submit', async e => {
+editForm.addEventListener('submit', async (e) => {
 	e.preventDefault()
 
 	const data = {
 		doggoName: e.target.elements[0].placeholder,
 		newDogName: e.target.elements[0].value,
-		newDogDesc: (newDogDesc = e.target.elements[1].value)
+		newDogDesc: (newDogDesc = e.target.elements[1].value),
 	}
 
 	editRequest(data)
-		.then(res => {
+		.then((res) => {
 			document.querySelector('.doggo-edit-success').style.display = 'block'
 
 			setTimeout(() => {
@@ -189,11 +189,11 @@ editForm.addEventListener('submit', async e => {
 
 			return loadDoggos()
 		})
-		.then(next => {
+		.then((next) => {
 			listenToDeleteModal()
 			listenToEditModal()
 		})
-		.catch(error => {
+		.catch((error) => {
 			alert(error)
 			console.log({ error })
 		})
