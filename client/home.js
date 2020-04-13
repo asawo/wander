@@ -35,6 +35,9 @@ async function loadDoggos() {
 	if (response.ok && resJson.doggos.length > 0) {
 		timeline.innerHTML = ''
 		resJson.doggos.forEach((doggo) => {
+			if (doggo.likestotal === null) {
+				doggo.likestotal = 0
+			}
 			addDoggos(
 				doggo.doggoid,
 				doggo.doggoname,
