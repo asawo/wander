@@ -60,6 +60,15 @@ const loadAll = async () => {
 	return result
 }
 
+const checkIfLiked = async (userId, doggoId) => {
+	const result = await db.oneOrNone(
+		'SELECT * FROM likes WHERE userid = $1 AND doggoid = $2;',
+		[userId, doggoId]
+	)
+	console.log({ result })
+	return result
+}
+
 const addDoggo = async (dogData) => {
 	const result = await db.none(
 		'INSERT INTO doggos(doggoname, description, imageurl, userid, username) VALUES($1,$2,$3,$4,$5)',
@@ -140,4 +149,5 @@ module.exports = {
 	bcrypt,
 	getLikes,
 	likeDoggo,
+	checkIfLiked,
 }

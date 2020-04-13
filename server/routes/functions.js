@@ -197,6 +197,24 @@ const likeDog = async (req, res) => {
 	}
 }
 
+const checkIfLiked = async (req, res) => {
+	// console.log(req.body, req.session)
+	const userId = req.session.user.userId
+	const doggoId = req.params.id
+
+	try {
+		const result = await dbcontroller.checkIfLiked(userId, doggoId)
+		if (!result) {
+			res.status(200).send(false)
+		} else {
+			res.status(200).send(true)
+		}
+	} catch (error) {
+		console.log({ error })
+		res.status(error.code).send(`${error.name}: ${error.message}`)
+	}
+}
+
 module.exports = {
 	registerUser,
 	createSession,
@@ -209,6 +227,7 @@ module.exports = {
 	deleteDogFromDb,
 	updateDog,
 	likeDog,
+	checkIfLiked,
 	dbcontroller,
 	s3controller,
 }
