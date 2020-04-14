@@ -183,13 +183,24 @@ const updateDog = (req, res) => {
 }
 
 const likeDog = async (req, res) => {
-	console.log(req.body)
 	const doggoId = req.body.doggoId
 	const userId = req.session.user.userId
-	console.log(userId, doggoId)
+
 	try {
 		const result = await dbcontroller.likeDoggo(userId, doggoId)
-		console.log({ result })
+		res.status(200).send(result)
+	} catch (error) {
+		console.log({ error })
+		res.status(error.code).send(`${error.name}: ${error.message}`)
+	}
+}
+
+const unlikeDog = async (req, res) => {
+	const doggoId = req.body.doggoId
+	const userId = req.session.user.userId
+
+	try {
+		const result = await dbcontroller.unlikeDoggo(userId, doggoId)
 		res.status(200).send(result)
 	} catch (error) {
 		console.log({ error })
@@ -198,7 +209,6 @@ const likeDog = async (req, res) => {
 }
 
 const checkIfLiked = async (req, res) => {
-	// console.log(req.body, req.session)
 	const userId = req.session.user.userId
 	const doggoId = req.params.id
 
@@ -227,6 +237,7 @@ module.exports = {
 	deleteDogFromDb,
 	updateDog,
 	likeDog,
+	unlikeDog,
 	checkIfLiked,
 	dbcontroller,
 	s3controller,

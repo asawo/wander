@@ -132,6 +132,14 @@ const likeDoggo = async (userId, doggoId) => {
 	return result
 }
 
+const unlikeDoggo = async (userId, doggoId) => {
+	const result = await db.any(
+		'DELETE FROM likes WHERE userid = $1 AND doggoid = $2 RETURNING doggoid, userid, dateliked',
+		[userId, doggoId]
+	)
+	return result
+}
+
 module.exports = {
 	createAccount,
 	userExists,
@@ -148,5 +156,6 @@ module.exports = {
 	bcrypt,
 	getLikes,
 	likeDoggo,
+	unlikeDoggo,
 	checkIfLiked,
 }
