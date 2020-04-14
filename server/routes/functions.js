@@ -190,7 +190,7 @@ const likeDog = async (req, res) => {
 	try {
 		const result = await dbcontroller.likeDoggo(userId, doggoId)
 		console.log({ result })
-		return result
+		res.status(200).send(result)
 	} catch (error) {
 		console.log({ error })
 		res.status(error.code).send(`${error.name}: ${error.message}`)
