@@ -1,8 +1,45 @@
 const alreadyLiked = async (doggoId) => {
 	const result = await fetch(`/users/check-like/${doggoId}`)
 	const response = await result.json()
-	console.log(response)
 	return response
+}
+
+const likeDog = async (doggoId = {}) => {
+	const response = await fetch('/users/like-doggo', {
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		method: 'POST',
+		body: JSON.stringify(doggoId),
+	})
+
+	const status = response.status
+	const res = await response.json()
+	return { status, res }
+}
+
+const listenToLikeButton = () => {
+	const likeButtons = document.querySelectorAll('#likeButton')
+	likeButtons.forEach((button) => {
+		button.addEventListener('click', async (e) => {
+			const doggoId = e.srcElement.parentNode.id
+
+			if (!button.classList.contains('liked')) {
+				await likeDog({ doggoId })
+			} else {
+				// make function unlikeDog({ doggoId }) here
+			}
+			await loadDoggos()
+		})
+	})
+}
+
+const toggleLike = (element) => {
+	if (!element.classList.contains('liked')) {
+		element.classList.add('liked')
+	} else {
+		element.classList.remove('liked')
+	}
 }
 
 const timeline = document.querySelector('#timeline')
@@ -59,6 +96,8 @@ async function loadDoggos() {
 				doggo.likestotal
 			)
 		})
+
+		listenToLikeButton()
 	} else if (response.ok && resJson.doggos.length === 0) {
 		console.log('HTTP-status: ' + response.status + ' but no data')
 		alert('HTTP-Error: ' + response.status + ' but no data')
@@ -67,54 +106,7 @@ async function loadDoggos() {
 	}
 }
 
-const likeDog = async (doggoId = {}) => {
-	const response = await fetch('/users/like-doggo', {
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		method: 'POST',
-		body: JSON.stringify(doggoId),
-	})
-
-	const status = response.status
-	const res = await response.json()
-
-	return { status, res }
-}
-
-const toggleLike = (element) => {
-	if (!element.classList.contains('liked')) {
-		element.classList.add('liked')
-	} else {
-		element.classList.remove('liked')
-	}
-}
-
-const listenToLikeButton = () => {
-	const likeButtons = document.querySelectorAll('#likeButton')
-	likeButtons.forEach((button) => {
-		button.addEventListener('click', async (e) => {
-			const doggoId = e.srcElement.parentNode.id
-
-			if (!button.classList.contains('liked')) {
-				likeDog({ doggoId })
-			} else {
-				// make function unlikeDog({ doggoId }) here
-			}
-
-			toggleLike(button)
-			// somehow add "liked" class if user already liked the doggo - need to maybe tweak loadDoggos()
-		})
-	})
-}
-
 loadDoggos()
-	.then((result) => {
-		listenToLikeButton()
-	})
-	.catch((error) => {
-		console.log('Error: ', error)
-	})
 
 const logOutBtn = document.querySelector('#logOut')
 
