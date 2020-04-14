@@ -18,6 +18,20 @@ const likeDog = async (doggoId = {}) => {
 	return { status, res }
 }
 
+const unlikeDog = async (doggoId = {}) => {
+	const response = await fetch('/users/unlike-doggo', {
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		method: 'DELETE',
+		body: JSON.stringify(doggoId),
+	})
+
+	const status = response.status
+	const res = await response.json()
+	return { status, res }
+}
+
 const listenToLikeButton = () => {
 	const likeButtons = document.querySelectorAll('#likeButton')
 	likeButtons.forEach((button) => {
@@ -27,7 +41,7 @@ const listenToLikeButton = () => {
 			if (!button.classList.contains('liked')) {
 				await likeDog({ doggoId })
 			} else {
-				// make function unlikeDog({ doggoId }) here
+				await unlikeDog({ doggoId })
 			}
 			await loadDoggos()
 		})
@@ -79,7 +93,6 @@ const addDoggos = async (
 async function loadDoggos() {
 	const response = await fetch('/all-doggos')
 	const resJson = await response.json()
-	console.log(resJson)
 
 	if (response.ok && resJson.doggos.length > 0) {
 		timeline.innerHTML = ''
