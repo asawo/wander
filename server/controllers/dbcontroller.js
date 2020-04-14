@@ -55,7 +55,7 @@ const authenticateUser = async (user, password) => {
 
 const loadAll = async () => {
 	const result = await db.any(
-		'SELECT doggos.doggoid, doggoname, imageurl, description, username, SUM(likes.likecount) AS likestotal FROM doggos LEFT JOIN likes ON doggos.doggoid = likes.doggoid GROUP BY doggos.doggoid, likes.likecount'
+		'SELECT doggos.doggoid, doggoname, imageurl, description, username, SUM(likes.likecount) AS likestotal FROM doggos LEFT JOIN likes ON doggos.doggoid = likes.doggoid GROUP BY doggos.doggoid, likes.likecount ORDER BY dateupdated DESC'
 	)
 	return result
 }
@@ -65,7 +65,6 @@ const checkIfLiked = async (userId, doggoId) => {
 		'SELECT * FROM likes WHERE userid = $1 AND doggoid = $2;',
 		[userId, doggoId]
 	)
-	console.log({ result })
 	return result
 }
 
