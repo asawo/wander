@@ -75,7 +75,7 @@ const addDoggos = async (
 				<p class="dogDescription">${description}</p>
 				<p class="font-italic text-muted"> – Added by ${username}</p>
 				<span class="mt-3" id="${doggoId}">
-					<button type="button" class="btn btn-dark" id="patButton" data-container="body" data-toggle="popover" data-placement="top" data-content="Very wow, much great pat technique Thanks for the pat, human 🐶❤️🦴">Pat 👋</button>
+					<button type="button" class="btn btn-dark" id="patButton" data-container="body" data-toggle="popover" data-placement="top" data-content="Very wow, such great pat technique Thanks for the pat, human 🐶❤️🦴">Pat 👋</button>
 					<button type="button" class="btn btn-secondary like-button-${doggoId}" id="likeButton"><i class="fa fa-heart" style="pointer-events: none;"></i> (${likes})</button>
 				</span>
 			</div>
