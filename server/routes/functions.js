@@ -89,7 +89,7 @@ const getSignedUrl = (req, res) => {
 	s3controller
 		.getUploadUrl(userId, doggoImageType)
 		.then((url) => {
-			res.send(url)
+			res.status(200).send(url)
 		})
 		.catch((error) => {
 			res.status(500).send({ error: error.message })
