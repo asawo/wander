@@ -129,4 +129,110 @@ describe(`functions.js unit tests`, function () {
 		})
 		// console.log(status.args[0][0], send.args[0][0])
 	})
+
+	it('loadAllDoggos() should return an object of doggos', async () => {
+		let req
+
+		const doggoStub = [
+			{
+				doggoid: 111,
+				doggoname: 'Japanese Doggo',
+				imageurl: 'https://stuburl.com/stubbyboi.jpeg',
+				description: 'Konbanwan 🐕',
+				username: 'hi',
+				likestotal: '3',
+			},
+			{
+				doggoid: 33,
+				doggoname: 'Huskyboi',
+				imageurl: 'https://stuburl.com/stubbyboi.jpeg',
+				description: 'Winter is coming ❄️',
+				username: 'hi',
+				likestotal: '2',
+			},
+		]
+
+		const loadAllStub = sinon
+			.stub(functionsjs.dbcontroller, 'loadAll')
+			.resolves(doggoStub)
+
+		await functionsjs.loadAllDoggos(req, res)
+		expect(status.calledOnce).to.be.true
+		expect(status.args[0][0]).to.equal(200)
+		expect(send.calledOnce).to.be.true
+		expect(send.args[0][0]).to.deep.equal({ doggos: doggoStub })
+		// console.log(status.args[0][0], send.args[0][0])
+	})
+
+	it('getSignedUrl() should return a secure url', async () => {
+		const reqStub = {
+			body: {
+				doggoImageType: 'jpg',
+			},
+			session: {
+				user: { userId: 5 },
+			},
+		}
+
+		let req = reqStub
+
+		const urlStub = 'http://www.stubbysecureurl.com'
+
+		const getUploadUrlStub = sinon
+			.stub(functionsjs.s3controller, 'getUploadUrl')
+			.resolves(urlStub)
+
+		await functionsjs.getSignedUrl(req, res)
+		expect(status.calledOnce).to.be.true
+		expect(status.args[0][0]).to.equal(200)
+		expect(send.calledOnce).to.be.true
+		expect(send.args[0][0]).to.equal(urlStub)
+		// console.log(status.args[0][0], send.args[0][0])
+	})
+
+	it('addDogToDb() should add dog to DB and return status 200 with success message ', async () => {
+		const req = {
+			body: {
+				doggoName: 'stubby',
+				imageUrl: 'stubby.com',
+				description: 'very stubby around the middle',
+			},
+			session: {
+				user: { userId: 5, username: 'userStub' },
+			},
+		}
+
+		const addDoggoStub = sinon
+			.stub(functionsjs.dbcontroller, 'addDoggo')
+			.resolves('Dog added')
+
+		await functionsjs.addDogToDb(req, res)
+		expect(status.calledOnce).to.be.true
+		expect(status.args[0][0]).to.equal(200)
+		expect(send.calledOnce).to.be.true
+		expect(send.args[0][0]).to.deep.equal({ message: 'SUCCESS' })
+		// console.log(status.args[0][0], send.args[0][0])
+	})
+
+	// it('addDogToDb() should return status 500 with with an error', async () => {
+	// 	const req = {
+	// 		body: {
+	// 			description: 'very stubby around the middle',
+	// 		},
+	// 		session: {
+	// 			user: { userId: 5, username: 'userStub' },
+	// 		},
+	// 	}
+
+	// 	const addDoggoStub = sinon
+	// 		.stub(functionsjs.dbcontroller, 'addDoggo')
+	// 		.throws('error')
+
+	// 	await functionsjs.addDogToDb(req, res)
+	// 	expect(status.calledOnce).to.be.true
+	// 	expect(status.args[0][0]).to.equal(500)
+	// 	expect(send.calledOnce).to.be.true
+	// 	// expect(send.args[0][0]).to.deep.equal('error')
+	// 	console.log(status.args[0][0], send.args[0][0])
+	// })
 })
