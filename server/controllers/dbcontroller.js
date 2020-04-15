@@ -113,9 +113,6 @@ const updateDoggo = async (doggoId, newDogName, newDogDesc) => {
 	return result
 }
 
-// #####################
-// getLikes, likeDoggo
-// #####################
 const getLikes = async (doggoId) => {
 	const result = await db.one(
 		'SELECT SUM(likecount) FROM likes WHERE doggoid = $1',
