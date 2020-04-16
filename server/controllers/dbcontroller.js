@@ -55,7 +55,7 @@ const authenticateUser = async (user, password) => {
 
 const loadAll = async () => {
 	const result = await db.any(
-		'SELECT doggos.doggoid, doggoname, imageurl, description, username, SUM(likes.likecount) AS likestotal FROM doggos LEFT JOIN likes ON doggos.doggoid = likes.doggoid GROUP BY doggos.doggoid, likes.likecount'
+		'SELECT doggos.doggoid, doggoname, imageurl, description, username, SUM(likes.likecount) AS likestotal FROM doggos LEFT JOIN likes ON doggos.doggoid = likes.doggoid GROUP BY doggos.doggoid, likes.likecount ORDER BY dateupdated DESC'
 	)
 	return result
 }
@@ -65,7 +65,6 @@ const checkIfLiked = async (userId, doggoId) => {
 		'SELECT * FROM likes WHERE userid = $1 AND doggoid = $2;',
 		[userId, doggoId]
 	)
-	console.log({ result })
 	return result
 }
 
@@ -114,21 +113,18 @@ const updateDoggo = async (doggoId, newDogName, newDogDesc) => {
 	return result
 }
 
-// #####################
-// getLikes, likeDoggo
-// #####################
-const getLikes = async (doggoId) => {
-	const result = await db.one(
-		'SELECT SUM(likecount) FROM likes WHERE doggoid = $1',
-		[doggoId]
-	)
-	return result
-}
-
 const likeDoggo = async (userId, doggoId) => {
 	const result = await db.any(
 		'INSERT INTO likes(doggoid, userid) VALUES($1,$2) RETURNING doggoid, userid, dateliked',
 		[doggoId, userId]
+	)
+	return result
+}
+
+const unlikeDoggo = async (userId, doggoId) => {
+	const result = await db.any(
+		'DELETE FROM likes WHERE userid = $1 AND doggoid = $2 RETURNING doggoid, userid, dateliked',
+		[userId, doggoId]
 	)
 	return result
 }
@@ -147,7 +143,7 @@ module.exports = {
 	updateDoggo,
 	db,
 	bcrypt,
-	getLikes,
 	likeDoggo,
+	unlikeDoggo,
 	checkIfLiked,
 }

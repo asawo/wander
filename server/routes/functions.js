@@ -89,7 +89,7 @@ const getSignedUrl = (req, res) => {
 	s3controller
 		.getUploadUrl(userId, doggoImageType)
 		.then((url) => {
-			res.send(url)
+			res.status(200).send(url)
 		})
 		.catch((error) => {
 			res.status(500).send({ error: error.message })
@@ -110,7 +110,6 @@ const addDogToDb = (req, res) => {
 		.addDoggo(dogData)
 		.then((result) => {
 			res.status(200).send({ message: 'SUCCESS' })
-			console.log(`Added ${dogData.doggoName}!`)
 		})
 		.catch((error) => {
 			res.status(500).send({ error: error.message })
@@ -132,29 +131,40 @@ const loadMyDoggos = (req, res) => {
 		})
 }
 
-const deleteDogFromDb = (req, res) => {
+const deleteDogFromDb = async (req, res) => {
 	const doggoName = req.body.doggoName
 	let doggoId = ''
 
-	dbcontroller
-		.getDoggo(doggoName)
-		.then((doggo) => {
-			doggoId = doggo.doggoid
-			return s3controller.deleteImage(doggo.imageurl)
-		})
-		.then((response) => {
-			return dbcontroller.deleteDoggo(doggoId)
-		})
-		.then((result) => {
-			res.status(200).send({ 'Doggo deleted': `Doggo ID: ${doggoId}` })
-		})
-		.catch((error) => {
-			res.status(500).send({ error: error.message })
-			console.log(error)
-		})
+	try {
+		const doggo = await dbcontroller.getDoggo(doggoName)
+		doggoId = doggo.doggoid
+		await s3controller.deleteImage(doggo.imageurl)
+		await dbcontroller.deleteDoggo(doggoId)
+		res.status(200).send({ 'Doggo deleted': `Doggo ID: ${doggoId}` })
+	} catch (error) {
+		console.log(error)
+		res.status(error.code).send(`${error.name}: ${error.message}`)
+	}
+
+	// dbcontroller
+	// 	.getDoggo(doggoName)
+	// 	.then((doggo) => {
+	// 		doggoId = doggo.doggoid
+	// 		return s3controller.deleteImage(doggo.imageurl)
+	// 	})
+	// 	.then((response) => {
+	// 		return dbcontroller.deleteDoggo(doggoId)
+	// 	})
+	// 	.then((result) => {
+	// 		res.status(200).send({ 'Doggo deleted': `Doggo ID: ${doggoId}` })
+	// 	})
+	// 	.catch((error) => {
+	// 		res.status(500).send({ error: error.message })
+	// 		console.log(error)
+	// 	})
 }
 
-const updateDog = (req, res) => {
+const updateDog = async (req, res) => {
 	const doggoData = {
 		doggoName: req.body.doggoName,
 		newDogName: req.body.newDogName,
@@ -163,34 +173,40 @@ const updateDog = (req, res) => {
 
 	let doggoId = ''
 
-	dbcontroller
-		.getDoggo(doggoData.doggoName)
-		.then((doggo) => {
-			doggoId = doggo.doggoid
-
-			return dbcontroller.updateDoggo(
-				doggoId,
-				doggoData.newDogName,
-				doggoData.newDogDesc
-			)
-		})
-		.then((response) => {
-			res.status(200).send({ response })
-		})
-		.catch((error) => {
-			res.status(500).send({ error: error.message })
-		})
+	try {
+		const doggo = await dbcontroller.getDoggo(doggoData.doggoName)
+		doggoId = doggo.doggoid
+		const response = await dbcontroller.updateDoggo(
+			doggoId,
+			doggoData.newDogName,
+			doggoData.newDogDesc
+		)
+		res.status(200).send(await response)
+	} catch (error) {
+		res.status(error.code).send(`${error.name}: ${error.message}`)
+	}
 }
 
 const likeDog = async (req, res) => {
-	console.log(req.body)
 	const doggoId = req.body.doggoId
 	const userId = req.session.user.userId
-	console.log(userId, doggoId)
+
 	try {
 		const result = await dbcontroller.likeDoggo(userId, doggoId)
-		console.log({ result })
-		return result
+		res.status(200).send(result)
+	} catch (error) {
+		console.log({ error })
+		res.status(error.code).send(`${error.name}: ${error.message}`)
+	}
+}
+
+const unlikeDog = async (req, res) => {
+	const doggoId = req.body.doggoId
+	const userId = req.session.user.userId
+
+	try {
+		const result = await dbcontroller.unlikeDoggo(userId, doggoId)
+		res.status(200).send(result)
 	} catch (error) {
 		console.log({ error })
 		res.status(error.code).send(`${error.name}: ${error.message}`)
@@ -198,7 +214,6 @@ const likeDog = async (req, res) => {
 }
 
 const checkIfLiked = async (req, res) => {
-	// console.log(req.body, req.session)
 	const userId = req.session.user.userId
 	const doggoId = req.params.id
 
@@ -227,6 +242,7 @@ module.exports = {
 	deleteDogFromDb,
 	updateDog,
 	likeDog,
+	unlikeDog,
 	checkIfLiked,
 	dbcontroller,
 	s3controller,
