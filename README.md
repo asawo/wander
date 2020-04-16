@@ -1,8 +1,11 @@
 # Wander
 
 My first full stack project for dog lovers 🐕
+
 Create an account to join the community and stare/like/pat the dogs! 👋🐶
+
 You can also upload dog profiles yourself for everyone else to enjoy 👍
+
 Deployed on [Heroku](https://wander-love.herokuapp.com/).
 
 ## Description
@@ -28,9 +31,11 @@ The aim of this service is to enable dog lovers to stare and appreciate dogs, an
 ## Status
 
 The base features have been completed. I plan to rewrite this from the ground up using modern tech to develop cooler features and smoother UX. Stay tuned!
+
 💡 The main idea I will be looking into in the next build is matching dog owners with other dog owners, as well as those wanting to provide services such as dog walkers/groomers/sitters 🐶
 
 ## Special thanks
 
 To @VeysonD for giving me guidance/direction/coaching 🙌
+
 To @pollyj for being the first user 🌸
