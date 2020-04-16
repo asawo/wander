@@ -26,6 +26,7 @@ The aim of this service is to enable dog lovers to stare and appreciate dogs, an
 - Node.js/express
 - Bcrypt
 - PostgreSQL
+- AWS s3
 - Mocha/chai/sinon
 
 ## Status
