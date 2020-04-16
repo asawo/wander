@@ -13,7 +13,7 @@ The aim of this service is to enable dog lovers to stare and appreciate dogs, an
 
 ## What it looks like
 
-<img src="https://imgur.com/N23ChHM" width="500"/>
+<img src="https://i.imgur.com/N23ChHM.png" width="500"/>
 
 ## Tech used
 
