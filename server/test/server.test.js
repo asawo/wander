@@ -275,26 +275,6 @@ describe('DB controller unit tests', () => {
 			})
 	})
 
-	// ###################
-	// ↓↓↓↓ Like and pat tests
-	// ###################
-	it('getLikes should get number of likes for a doggo', (done) => {
-		const oneStub = sinon
-			.stub(dbcontroller.db, 'one')
-			.resolves({ likecount: 5 })
-
-		dbcontroller
-			.getLikes(5)
-			.then((res) => {
-				expect(res).to.deep.equal({ likecount: 5 })
-				done()
-			})
-			.catch((err) => {
-				console.log(err)
-				expect(err).to.be.a('null')
-			})
-	})
-
 	it('likeDoggo should create a like entry in DB', (done) => {
 		const dbData = {
 			doggoid: 5,
@@ -314,12 +294,9 @@ describe('DB controller unit tests', () => {
 				expect(err).to.be.a('null')
 			})
 	})
-	// ###################
-	// ↑↑↑↑ Like and pat tests
-	// ###################
 })
 
-describe('S3 controller unit tests', function () {
+describe('S3 controller connection tests', function () {
 	it('getUploadUrl should return an object with upload key and url', (done) => {
 		s3controller
 			.getUploadUrl('20', 'image/jpeg')
@@ -329,6 +306,20 @@ describe('S3 controller unit tests', function () {
 			})
 			.catch((err) => {
 				expect(err).to.be.a('null')
+			})
+	})
+
+	it('deleteImage with invalid url should return an object with upload key and url', (done) => {
+		const url = 'www.aws.s3/asfasd'
+
+		s3controller
+			.deleteImage(url)
+			.then((res) => {})
+			.catch((err) => {
+				expect(err.message).to.equal(
+					'Expected uri parameter to have length >= 1, but found "" for params.Key'
+				)
+				done()
 			})
 	})
 })
