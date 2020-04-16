@@ -16,7 +16,7 @@ const getUploadUrl = async (userId, doggoImageType) => {
 				{
 					Bucket: 'wander-love-images',
 					Key: key,
-					ContentType: doggoImageType
+					ContentType: doggoImageType,
 				},
 				(err, url) => {
 					if (err) {
@@ -34,15 +34,15 @@ const getUploadUrl = async (userId, doggoImageType) => {
 	}
 }
 
-const deleteImage = async url => {
+const deleteImage = async (url) => {
 	const key = url.slice(59)
-	console.log('key: ', key)
+
 	try {
 		const result = await new Promise((resolve, reject) => {
 			s3.deleteObject(
 				{
 					Bucket: 'wander-love-images',
-					Key: key
+					Key: key,
 				},
 				(err, data) => {
 					if (err) {
@@ -52,15 +52,13 @@ const deleteImage = async url => {
 				}
 			)
 		})
-		console.log('result from deleteImage function', result)
 		return result
 	} catch (err) {
-		console.log(err)
 		throw err
 	}
 }
 
 module.exports = {
 	getUploadUrl,
-	deleteImage
+	deleteImage,
 }
