@@ -6,8 +6,8 @@ chai.use(require('chai-as-promised'))
 const chaiHttp = require('chai-http')
 const sinon = require('sinon')
 // const server = require('../index.js')
-const dbcontroller = require('../controllers/dbcontroller.js')
-const s3controller = require('../controllers/s3controller.js')
+const dbcontroller = require('../../controllers/dbcontroller.js')
+const s3controller = require('../../controllers/s3controller.js')
 
 chai.use(chaiHttp)
 

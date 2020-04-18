@@ -5,8 +5,9 @@
 	"main": "./server/index.js",
 	"scripts": {
 		"dev": "nodemon server/index.js",
-		"test": "mocha ./server/test",
-		"test-coverage": "nyc --reporter=text mocha ./server/test",
+		"test": "mocha ./server/test/unit_tests",
+		"test-integration": "mocha ./server/test/integration_tests",
+		"test-coverage": "nyc --reporter=text mocha ./server/test/**/",
 		"local": "heroku local web",
 		"pkill": "sudo pkill -u postgres"
 	},
