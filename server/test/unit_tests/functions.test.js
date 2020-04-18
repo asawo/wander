@@ -6,7 +6,7 @@ const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
 chai.use(require('chai-as-promised'))
 const sinon = require('sinon')
-const functionsjs = require('../routes/functions')
+const functionsjs = require('../../routes/functions.js')
 
 describe(`functions.js unit tests`, function () {
 	let status, send, res
