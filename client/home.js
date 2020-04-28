@@ -90,11 +90,11 @@ const addDoggos = async (
 
 async function loadDoggos() {
 	const response = await fetch('/all-doggos')
-	const resJson = await response.json()
+	const data = await response.json()
 
-	if (response.ok && resJson.doggos.length > 0) {
+	if (response.ok && data.doggos.length > 0) {
 		timeline.innerHTML = ''
-		resJson.doggos.forEach((doggo) => {
+		data.doggos.forEach((doggo) => {
 			if (doggo.likestotal === null) {
 				doggo.likestotal = 0
 			}
@@ -113,7 +113,7 @@ async function loadDoggos() {
 		$(function () {
 			$('[data-toggle="popover"]').popover()
 		})
-	} else if (response.ok && resJson.doggos.length === 0) {
+	} else if (response.ok && data.doggos.length === 0) {
 		console.log('HTTP-status: ' + response.status + ' but no data')
 		alert('HTTP-Error: ' + response.status + ' but no data')
 	} else {
