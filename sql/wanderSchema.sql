@@ -28,9 +28,6 @@ CREATE TABLE public.doggos (
     username text
 );
 
-
-ALTER TABLE public.doggos OWNER TO asawo;
-
 --
 -- Name: doggos_doggoid_seq; Type: SEQUENCE; Schema: public; Owner: asawo
 --
@@ -43,15 +40,11 @@ CREATE SEQUENCE public.doggos_doggoid_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.doggos_doggoid_seq OWNER TO asawo;
-
 --
 -- Name: doggos_doggoid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: asawo
 --
 
 ALTER SEQUENCE public.doggos_doggoid_seq OWNED BY public.doggos.doggoid;
-
 
 --
 -- Name: likes; Type: TABLE; Schema: public; Owner: asawo
@@ -65,9 +58,6 @@ CREATE TABLE public.likes (
     likecount integer DEFAULT 1 NOT NULL
 );
 
-
-ALTER TABLE public.likes OWNER TO asawo;
-
 --
 -- Name: likes_id_seq; Type: SEQUENCE; Schema: public; Owner: asawo
 --
@@ -80,15 +70,11 @@ CREATE SEQUENCE public.likes_id_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.likes_id_seq OWNER TO asawo;
-
 --
 -- Name: likes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: asawo
 --
 
 ALTER SEQUENCE public.likes_id_seq OWNED BY public.likes.id;
-
 
 --
 -- Name: users_userid_seq; Type: SEQUENCE; Schema: public; Owner: asawo
@@ -101,9 +87,6 @@ CREATE SEQUENCE public.users_userid_seq
     NO MAXVALUE
     CACHE 1;
 
-
-ALTER TABLE public.users_userid_seq OWNER TO asawo;
-
 --
 -- Name: users; Type: TABLE; Schema: public; Owner: asawo
 --
@@ -114,22 +97,17 @@ CREATE TABLE public.users (
     password character varying(100)
 );
 
-
-ALTER TABLE public.users OWNER TO asawo;
-
 --
 -- Name: doggos doggoid; Type: DEFAULT; Schema: public; Owner: asawo
 --
 
 ALTER TABLE ONLY public.doggos ALTER COLUMN doggoid SET DEFAULT nextval('public.doggos_doggoid_seq'::regclass);
 
-
 --
 -- Name: likes id; Type: DEFAULT; Schema: public; Owner: asawo
 --
 
 ALTER TABLE ONLY public.likes ALTER COLUMN id SET DEFAULT nextval('public.likes_id_seq'::regclass);
-
 
 --
 -- Name: doggos doggos_pkey; Type: CONSTRAINT; Schema: public; Owner: asawo
@@ -138,14 +116,12 @@ ALTER TABLE ONLY public.likes ALTER COLUMN id SET DEFAULT nextval('public.likes_
 ALTER TABLE ONLY public.doggos
     ADD CONSTRAINT doggos_pkey PRIMARY KEY (doggoid);
 
-
 --
 -- Name: likes likes_pkey; Type: CONSTRAINT; Schema: public; Owner: asawo
 --
 
 ALTER TABLE ONLY public.likes
     ADD CONSTRAINT likes_pkey PRIMARY KEY (id);
-
 
 --
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: asawo
@@ -154,14 +130,12 @@ ALTER TABLE ONLY public.likes
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (userid);
 
-
 --
 -- Name: likes doggoid; Type: FK CONSTRAINT; Schema: public; Owner: asawo
 --
 
 ALTER TABLE ONLY public.likes
     ADD CONSTRAINT doggoid FOREIGN KEY (doggoid) REFERENCES public.doggos(doggoid);
-
 
 --
 -- Name: doggos doggos_userid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: asawo
@@ -170,14 +144,12 @@ ALTER TABLE ONLY public.likes
 ALTER TABLE ONLY public.doggos
     ADD CONSTRAINT doggos_userid_fkey FOREIGN KEY (userid) REFERENCES public.users(userid);
 
-
 --
 -- Name: likes userid; Type: FK CONSTRAINT; Schema: public; Owner: asawo
 --
 
 ALTER TABLE ONLY public.likes
     ADD CONSTRAINT userid FOREIGN KEY (userid) REFERENCES public.users(userid);
-
 
 --
 -- PostgreSQL database dump complete
