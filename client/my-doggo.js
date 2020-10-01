@@ -18,7 +18,7 @@ const addDoggos = (doggoName, description, imageurl) => {
 
 				</span>
 			</div>
-			<img src=${imageurl} class="doggoImage mt-3" alt="Doggo image" width="100%">
+			<img src=${imageurl} class="doggoImage mt-3" alt="Doggo image" width="100%" loading="lazy">
 			<div class="card-body">
 				<h1 class="dogName">${doggoName}</h1>
 				<p class="dogDescription">${description}</p>
